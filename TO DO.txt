@@ -1,0 +1,33 @@
+TO DO:
+
+AJUDA COM OS TABS/ESPAÇOS!!!
+INPUT:
+	t - +
+	l - +
+	n - +
+	u - + 
+	m - 
+	d - 
+	a -
+	q - +
+
+VERIFICAR INPUT:
+	t - 
+	l - 
+	n - 
+	u - 
+	m -
+	d -
+	a -
+	q - +
+
+OUTPUT:
+	t - 
+	l - 
+	n - +
+	u - 
+	m -
+	d -
+	a -
+	q - +
+

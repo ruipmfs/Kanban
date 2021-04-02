@@ -58,7 +58,7 @@ void readSentence(char sentence[]) {
 /*############################## CASE FUNCTIONS ##############################*/
 
 int caseT(int time, int task_counter, Task tasks[]) {
-    int duration, i, a;
+    int duration, i;
     char description[MAXDESC], c;
     Task t;
     
@@ -78,6 +78,11 @@ int caseT(int time, int task_counter, Task tasks[]) {
             printf("duplicate description");
             return task_counter;
         }
+    }
+
+    if (duration <= 0) {
+        printf("invalid duration");
+        return task_counter;
     }
 
     t.duration = duration;
@@ -130,8 +135,11 @@ void caseL(int task_counter, Task tasks[]) {
 
 int caseN(int time) {
     int add_time;
+    char c;
+
     getchar();
-    add_time = readInt();
+    scanf("%d", &add_time);
+    while ((c = getchar()) != EOF && c != '\n');
     time += add_time;
     return time;
 }
@@ -139,16 +147,12 @@ int caseN(int time) {
 int caseU(int user_counter, User users[]) {
     User new_user;
     char c;
-    int i = 0;
+    int i = 0, test = 0;
 
-    getchar();
-    while ((c = getchar()) != EOF && c != ' ' && c != '\n' && i < MAXUSERLEN-1) {
-        new_user.name[i] = c;
-        i++;
-    }
-    new_user.name[i] = '\0';
+    test = scanf("%20[^\n]", new_user.name);
+    while ((c = getchar()) != EOF && c != '\n');
 
-    if (strcmp(new_user.name, "\0") == 0) {
+    if (test == 0) {
         for (i = 0; i < user_counter; i++) {
             printf("%s\n", users[i].name);
         }
@@ -177,7 +181,7 @@ void caseM() {
 
 }
 
-void caseD(int act_counter, Activity act[]) {
+void caseD(/*int act_counter, Activity act[]*/) {
 /*    char activity[MAXACTLEN], c;
     int i;
 
