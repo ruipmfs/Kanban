@@ -1,0 +1,304 @@
+
+**** K A N B A N ****
+t - Criar tarefa
+l - Mostrar tarefas
+n - Avancar tempo
+u - Gerir utilizadores
+m - Mover tarefa
+d - Mostrar tarefas na atividade
+a - Gerir atividades
+q - Sair
+************************
+2
+Duration: 234, Description: hello
+hello
+task 1
+**** K A N B A N ****
+t - Criar tarefa
+l - Mostrar tarefas
+n - Avancar tempo
+u - Gerir utilizadores
+m - Mover tarefa
+d - Mostrar tarefas na atividade
+a - Gerir atividades
+q - Sair
+************************
+2
+Duration: 234, Description: helloo
+helloo
+task 2
+**** K A N B A N ****
+t - Criar tarefa
+l - Mostrar tarefas
+n - Avancar tempo
+u - Gerir utilizadores
+m - Mover tarefa
+d - Mostrar tarefas na atividade
+a - Gerir atividades
+q - Sair
+************************
+2
+Duration: 234, Description: hellooo
+hellooo
+task 3
+**** K A N B A N ****
+t - Criar tarefa
+l - Mostrar tarefas
+n - Avancar tempo
+u - Gerir utilizadores
+m - Mover tarefa
+d - Mostrar tarefas na atividade
+a - Gerir atividades
+q - Sair
+************************
+2
+Duration: 234, Description: helloooo
+helloooo
+task 4
+**** K A N B A N ****
+t - Criar tarefa
+l - Mostrar tarefas
+n - Avancar tempo
+u - Gerir utilizadores
+m - Mover tarefa
+d - Mostrar tarefas na atividade
+a - Gerir atividades
+q - Sair
+************************
+2
+Duration: 234, Description: hellooooo
+hellooooo
+task 5
+**** K A N B A N ****
+t - Criar tarefa
+l - Mostrar tarefas
+n - Avancar tempo
+u - Gerir utilizadores
+m - Mover tarefa
+d - Mostrar tarefas na atividade
+a - Gerir atividades
+q - Sair
+************************
+2
+Duration: 234, Description: helloooooo
+helloooooo
+task 6
+**** K A N B A N ****
+t - Criar tarefa
+l - Mostrar tarefas
+n - Avancar tempo
+u - Gerir utilizadores
+m - Mover tarefa
+d - Mostrar tarefas na atividade
+a - Gerir atividades
+q - Sair
+************************
+2
+Duration: 234, Description: hellooooooo
+hellooooooo
+task 7
+**** K A N B A N ****
+t - Criar tarefa
+l - Mostrar tarefas
+n - Avancar tempo
+u - Gerir utilizadores
+m - Mover tarefa
+d - Mostrar tarefas na atividade
+a - Gerir atividades
+q - Sair
+************************
+2
+Duration: 234, Description: helloooooooo
+helloooooooo
+task 8
+**** K A N B A N ****
+t - Criar tarefa
+l - Mostrar tarefas
+n - Avancar tempo
+u - Gerir utilizadores
+m - Mover tarefa
+d - Mostrar tarefas na atividade
+a - Gerir atividades
+q - Sair
+************************
+2
+Duration: 234, Description: hellooooooooo
+hellooooooooo
+task 9
+**** K A N B A N ****
+t - Criar tarefa
+l - Mostrar tarefas
+n - Avancar tempo
+u - Gerir utilizadores
+m - Mover tarefa
+d - Mostrar tarefas na atividade
+a - Gerir atividades
+q - Sair
+************************
+2
+Duration: 234, Description: helloooooooooo
+helloooooooooo
+task 10
+**** K A N B A N ****
+t - Criar tarefa
+l - Mostrar tarefas
+n - Avancar tempo
+u - Gerir utilizadores
+m - Mover tarefa
+d - Mostrar tarefas na atividade
+a - Gerir atividades
+q - Sair
+************************
+2
+Duration: 234, Description: hellooooooooooo
+hellooooooooooo
+task 11
+**** K A N B A N ****
+t - Criar tarefa
+l - Mostrar tarefas
+n - Avancar tempo
+u - Gerir utilizadores
+m - Mover tarefa
+d - Mostrar tarefas na atividade
+a - Gerir atividades
+q - Sair
+************************
+2
+Duration: 234, Description: helloooooooooooo
+helloooooooooooo
+task 12
+**** K A N B A N ****
+t - Criar tarefa
+l - Mostrar tarefas
+n - Avancar tempo
+u - Gerir utilizadores
+m - Mover tarefa
+d - Mostrar tarefas na atividade
+a - Gerir atividades
+q - Sair
+************************
+2
+Duration: 234, Description: hellooooooooooooo
+hellooooooooooooo
+task 13
+**** K A N B A N ****
+t - Criar tarefa
+l - Mostrar tarefas
+n - Avancar tempo
+u - Gerir utilizadores
+m - Mover tarefa
+d - Mostrar tarefas na atividade
+a - Gerir atividades
+q - Sair
+************************
+2
+Duration: 234, Description: helloooooooooooooo
+helloooooooooooooo
+task 14
+**** K A N B A N ****
+t - Criar tarefa
+l - Mostrar tarefas
+n - Avancar tempo
+u - Gerir utilizadores
+m - Mover tarefa
+d - Mostrar tarefas na atividade
+a - Gerir atividades
+q - Sair
+************************
+2
+Duration: 234, Description: hellooooooooooooooo
+hellooooooooooooooo
+task 15
+**** K A N B A N ****
+t - Criar tarefa
+l - Mostrar tarefas
+n - Avancar tempo
+u - Gerir utilizadores
+m - Mover tarefa
+d - Mostrar tarefas na atividade
+a - Gerir atividades
+q - Sair
+************************
+2
+Duration: 234, Description: helloooooooooooooooo
+helloooooooooooooooo
+task 16
+**** K A N B A N ****
+t - Criar tarefa
+l - Mostrar tarefas
+n - Avancar tempo
+u - Gerir utilizadores
+m - Mover tarefa
+d - Mostrar tarefas na atividade
+a - Gerir atividades
+q - Sair
+************************
+2
+Duration: 234, Description: hellooooooooooooooooo
+hellooooooooooooooooo
+task 17
+**** K A N B A N ****
+t - Criar tarefa
+l - Mostrar tarefas
+n - Avancar tempo
+u - Gerir utilizadores
+m - Mover tarefa
+d - Mostrar tarefas na atividade
+a - Gerir atividades
+q - Sair
+************************
+2
+Duration: 234, Description: helloooooooooooooooooo
+helloooooooooooooooooo
+task 18
+**** K A N B A N ****
+t - Criar tarefa
+l - Mostrar tarefas
+n - Avancar tempo
+u - Gerir utilizadores
+m - Mover tarefa
+d - Mostrar tarefas na atividade
+a - Gerir atividades
+q - Sair
+************************
+2
+Duration: 234, Description: hellooooooooooooooooooo
+hellooooooooooooooooooo
+task 19
+**** K A N B A N ****
+t - Criar tarefa
+l - Mostrar tarefas
+n - Avancar tempo
+u - Gerir utilizadores
+m - Mover tarefa
+d - Mostrar tarefas na atividade
+a - Gerir atividades
+q - Sair
+************************
+2
+Duration: 234, Description: helloooooooooooooooooooo
+helloooooooooooooooooooo
+task 20
+**** K A N B A N ****
+t - Criar tarefa
+l - Mostrar tarefas
+n - Avancar tempo
+u - Gerir utilizadores
+m - Mover tarefa
+d - Mostrar tarefas na atividade
+a - Gerir atividades
+q - Sair
+************************
+2
+Duration: 234, Description: hellooooooooooooooooooooo
+too many tasks
+**** K A N B A N ****
+t - Criar tarefa
+l - Mostrar tarefas
+n - Avancar tempo
+u - Gerir utilizadores
+m - Mover tarefa
+d - Mostrar tarefas na atividade
+a - Gerir atividades
+q - Sair
+************************

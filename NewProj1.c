@@ -6,8 +6,8 @@
 #define MAXID 1000
 #define MAXUSERS 50
 #define MAXACT 10
-#define MAXACTLEN 20
-#define MAXUSERLEN 20
+#define MAXACTLEN 21
+#define MAXUSERLEN 21
 #define MAXTASKS 20
 
 typedef struct {
@@ -58,11 +58,13 @@ void readSentence(char sentence[]) {
 /*############################## CASE FUNCTIONS ##############################*/
 
 int caseT(int time, int task_counter, Task tasks[]) {
-    int duration, i;
-    char description[MAXDESC];
+    int duration, i, a;
+    char description[MAXDESC], c;
     Task t;
     
-    scanf("%d %[^\n]", &duration, description);
+    scanf("%d %50[^\n]", &duration, description);
+
+    while ((c = getchar()) != EOF && c != '\n');
     
     printf("Duration: %d, Description: %s\n", duration, description);
 
@@ -175,29 +177,33 @@ void caseM() {
 
 }
 
-void caseD() {
-    /*char activity[MAXACTLEN+1], c;
+void caseD(int act_counter, Activity act[]) {
+/*    char activity[MAXACTLEN], c;
     int i;
 
-    while ((c = getchar()) != EOF && c != '\n' && c != '\0' && i < MAXACTLEN) {
-        if (islower(c)) {
-            printf("invalid description");
-            break;
+    scanf("%20[^\n]", activity);
+    while ((c = getchar()) != EOF && c != '\n');
+
+    for (i = 0; i < act_counter; i++) {
+        SORT
+        if (strcmp(activity, act[i].name) == 0) {
+            printf("")
         }
-        else {
-            activity[i] = c;
-            i++;
-        }
-    }
-    activity[i] = '\0';*/
+
+    } */
+    /* printf("no such activity"); 
+    return;
+    */
 }
 
 int caseA(int act_counter, Activity act[]) {
     Activity new_a;
     int i, j;
+    char c;
 
     getchar();
-    readSentence(new_a.name);
+    scanf("%20[^\n]", new_a.name);
+    while ((c = getchar()) != EOF && c != '\n');
 
     if (act_counter >= MAXACT) {
         printf("too many activities");
@@ -220,12 +226,11 @@ int caseA(int act_counter, Activity act[]) {
 
     strcpy(act[act_counter].name, new_a.name);
     act_counter++;
-    return act_counter;
-
     printf("%s\n%s\n%s\n%s\n", act[0].name, act[1].name, act[2].name, act[3].name);
+    return act_counter;
 }
 
-/*############################## AUX FUNCTIONS ##############################*/
+/*############################## MAIN FUNCTIONS ##############################*/
 
 void displayMenu() {
     printf("\n**** K A N B A N ****\n");
@@ -284,7 +289,7 @@ int main() {
                 case 'd':
                     /* d <atividade> */
                     /* MOSTRA TAREFA NA ATIVIDADE */
-                    caseD();
+                    caseD(act_counter, act);
                     break;
                 case 'a':
                     /* a [<atividade>] */
