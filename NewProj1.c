@@ -134,14 +134,20 @@ void caseL(int task_counter, Task tasks[]) {
 }
 
 int caseN(int time) {
-    int add_time;
+    int add_time, verifier = 0;
     char c;
 
     getchar();
-    scanf("%d", &add_time);
+    verifier = scanf("%d", &add_time);
     while ((c = getchar()) != EOF && c != '\n');
-    time += add_time;
-    return time;
+    if (verifier != 1 || add_time < 0) {
+        printf("invalid time");
+        return time;
+    }
+    else {
+        printf("%d", (time + add_time));
+        return (time + add_time);
+    }
 }
 
 int caseU(int user_counter, User users[]) {
@@ -278,7 +284,6 @@ int main() {
                 case 'n':
                     /* n <duração> */
                     time = caseN(time);
-                    printf("%d", time);
                     break;
                 case 'u':
                     /* u [<utilizador>] */
