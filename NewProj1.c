@@ -187,23 +187,22 @@ void caseM() {
 
 }
 
-void caseD(/*int act_counter, Activity act[]*/) {
-/*    char activity[MAXACTLEN], c;
+void caseD(int act_counter, Activity act[]) {
+    char activity[MAXACTLEN], c;
     int i;
 
-    scanf("%20[^\n]", activity);
+    scanf("20%[^\n]", activity);
     while ((c = getchar()) != EOF && c != '\n');
 
     for (i = 0; i < act_counter; i++) {
-        SORT
         if (strcmp(activity, act[i].name) == 0) {
-            printf("")
+            /* SORT */
+            return;
         }
-
-    } */
-    /* printf("no such activity"); 
+    }
+    
+    printf("no such activity");
     return;
-    */
 }
 
 int caseA(int act_counter, Activity act[]) {
@@ -212,7 +211,7 @@ int caseA(int act_counter, Activity act[]) {
     char c;
 
     getchar();
-    scanf("%20[^\n]", new_a.name);
+    scanf("20%[^\n]", new_a.name);
     while ((c = getchar()) != EOF && c != '\n');
 
     if (act_counter >= MAXACT) {

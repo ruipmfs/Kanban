@@ -3,18 +3,18 @@ TO DO:
 AJUDA COM OS TABS/ESPAÇOS!!!
 INPUT:
 	t - +
-	l - +
+	l - 
 	n - +
-	u - + 
+	u - + -
 	m - 
-	d - 
-	a -
+	d - +
+	a - +
 	q - +
 
 VERIFICAR INPUT:
-	t - 
+	t - +
 	l - 
-	n - 
+	n - +
 	u - 
 	m -
 	d -
@@ -22,7 +22,7 @@ VERIFICAR INPUT:
 	q - +
 
 OUTPUT:
-	t - 
+	t - +
 	l - 
 	n - +
 	u - 
