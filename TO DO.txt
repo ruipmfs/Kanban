@@ -1,6 +1,7 @@
 TO DO:
 
 AJUDA COM OS TABS/ESPAÇOS!!!
+
 INPUT:
 	t - +
 	l - 

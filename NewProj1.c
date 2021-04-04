@@ -25,34 +25,6 @@ typedef struct {
 
 /*############################## READ FUNCTIONS ##############################*/
 
-int readInt() {
-    char c;
-    int num = 0, is_num = 0;
-
-    while ((c = getchar()) != EOF && c != '\n' && (c != ' ' || is_num == 0)) {
-        if (c >= '0' && c <= '9') {
-            num = num * 10 + (c - '0');
-            is_num = 1;
-        }
-        else if (c == ' ' && is_num == 0) {
-            continue;
-        }
-        else {
-            printf("readInt: error");
-        }
-    }
-    return num;
-}
-
-void readSentence(char sentence[]) {
-    char c;
-    int i = 0;
-
-    while ((c = getchar()) != EOF && c != '\n') {
-        sentence[i++] = c;
-    }
-    sentence[i] = '\0';
-}
 
 
 /*############################## CASE FUNCTIONS ##############################*/
@@ -184,6 +156,15 @@ int caseU(int user_counter, User users[]) {
 }
 
 void caseM() {
+    int id;
+    char user[MAXUSERLEN], act[MAXACTLEN], c;
+
+    scanf("%d %20s %20[^\n]", &id, user, act);
+    while ((c = getchar()) != EOF && c != '\n');
+
+    printf("ID:%d\nUSER:%s\nACT:%s\n", id, user, act);
+
+    /* ... */
 
 }
 
@@ -200,7 +181,7 @@ void caseD(int act_counter, Activity act[]) {
             return;
         }
     }
-    
+
     printf("no such activity");
     return;
 }
