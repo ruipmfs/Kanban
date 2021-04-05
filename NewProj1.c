@@ -72,7 +72,7 @@ int caseT(int time, int task_counter, Task tasks[]) {
     return task_counter;
 }
 
-void caseL(int task_counter, Task tasks[]) {
+int caseL(int task_counter, Task tasks[]) {
     int id_list[MAXUSERS];
     char c;
     int id = 0, list_size = 0, i, j;
@@ -92,6 +92,7 @@ void caseL(int task_counter, Task tasks[]) {
         /*SORT*/
         for (i = 1; i < list_size; i++) {
             printf("%d %s #%d %s\n", tasks[i].id, tasks[i].activity, tasks[i].duration, tasks[i].description);
+            return id_list;
         }
     }
     else {
@@ -99,6 +100,7 @@ void caseL(int task_counter, Task tasks[]) {
             for (j = 0; j < task_counter; j++) {
                 if (tasks[j].id == id_list[i]) {
                     printf("%d %s #%d %s\n", tasks[j].id, tasks[j].activity, tasks[j].duration, tasks[j].description);
+                    return id_list;
                 }
             }
         }
@@ -155,8 +157,8 @@ int caseU(int user_counter, User users[]) {
     }
 }
 
-void caseM() {
-    int id;
+void caseM(int act_counter, int id_list[], Task tasks[]) {
+    int id, waste = 0, slack = 0, i, verifier = 0;
     char user[MAXUSERLEN], act[MAXACTLEN], c;
 
     scanf("%d %20s %20[^\n]", &id, user, act);
@@ -164,6 +166,25 @@ void caseM() {
 
     printf("ID:%d\nUSER:%s\nACT:%s\n", id, user, act);
 
+    if (strcmp(act, "DONE") != 0) {
+        /* MOVE TAREFA */
+        return;
+    }
+
+    for (i = 0; i < 4/*ID LIST LEN*/; i++) {
+
+    }
+    
+    for (i = 0; i < act_counter; i++) {
+        if (strcmp(act, tasks[i].activity) == 0) {
+            verifier = 1;
+        }
+    }
+
+    if (verifier == 0) {
+        printf("no such activity");
+        return;
+    }
     /* ... */
 
 }
@@ -237,7 +258,7 @@ void displayMenu() {
 
 int main() {
     char c;
-    int exit = 0, time = 0, task_counter = 0, act_counter = 3, user_counter = 0;
+    int exit = 0, time = 0, task_counter = 0, act_counter = 3, user_counter = 0, id_list[MAXID];
     Task tasks[MAXTASKS];
     Activity act[MAXACT];
     User users[MAXUSERS];
@@ -273,7 +294,7 @@ int main() {
                 case 'm':
                     /* m <id> <utilizador> <atividade> */
                     /* MOVE TAREFA */
-                    caseM();
+                    caseM(act_counter, id_list, tasks);
                     break;
                 case 'd':
                     /* d <atividade> */
