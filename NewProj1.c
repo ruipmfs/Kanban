@@ -68,13 +68,13 @@ int caseT(int time, int task_counter, Task tasks[]) {
     return task_counter;
 }
 
-int caseL(int task_counter, Task tasks[]) {
-    int id_list[MAXUSERS];
+void caseL(int task_counter, Task tasks[]) {
+    int id_list[MAXUSERS] = {0};
     char c;
     int id = 0, list_size = 0, i, j;
 
     while ((c = getchar()) != EOF && c != '\n') {
-        if (c == ' ') {
+        if (c == ' ' || c == '\t') {
             id_list[list_size] = id;
             list_size++;
             id = 0;
@@ -83,12 +83,15 @@ int caseL(int task_counter, Task tasks[]) {
             id = id * 10 + (c - '0');
         }
     }
+    id_list[list_size] = id;
+
+    printf("%d %d %d", id_list[1], id_list[2], id_list[3]);
     
     if (list_size == 0) {
         /*SORT*/
         for (i = 1; i < list_size; i++) {
             printf("%d %s #%d %s\n", tasks[i].id, tasks[i].activity, tasks[i].duration, tasks[i].description);
-            return id_list;
+            return;
         }
     }
     else {
@@ -96,7 +99,7 @@ int caseL(int task_counter, Task tasks[]) {
             for (j = 0; j < task_counter; j++) {
                 if (tasks[j].id == id_list[i]) {
                     printf("%d %s #%d %s\n", tasks[j].id, tasks[j].activity, tasks[j].duration, tasks[j].description);
-                    return id_list;
+                    return;
                 }
             }
         }
@@ -154,8 +157,8 @@ int caseU(int user_counter, User users[]) {
 }
 
 /* TO DO */
-void caseM(int time, int act_counter, int user_counter, User users[], Task tasks[]) {
-    int id, waste = 0, slack = 0, i, verifier = 0;
+void caseM() {
+    int id;
     char user[MAXUSERLEN], act[MAXACTLEN], c;
 
     scanf("%d %20s %20[^\n]", &id, user, act);
@@ -163,8 +166,8 @@ void caseM(int time, int act_counter, int user_counter, User users[], Task tasks
 
     printf("ID:%d\nUSER:%s\nACT:%s\n", id, user, act);
 
-    if (strcmp(act, "DONE") != 0) {
-        waste = 0; /* ??? */
+    /*if (strcmp(act, "DONE") != 0) {
+        waste = 0;
         slack = waste - tasks[0].duration;
         return;
     }
@@ -205,7 +208,7 @@ void caseM(int time, int act_counter, int user_counter, User users[], Task tasks
     if (verifier == 0) {
         printf("no such activity");
         return;
-    }
+    }*/
 }
 
 void caseD(int act_counter, Activity act[]) {
@@ -277,7 +280,7 @@ void displayMenu() {
 
 int main() {
     char c;
-    int exit = 0, time = 0, task_counter = 0, act_counter = 3, user_counter = 0, id_list[MAXID];
+    int exit = 0, time = 0, task_counter = 0, act_counter = 3, user_counter = 0;
     Task tasks[MAXTASKS];
     Activity act[MAXACT];
     User users[MAXUSERS];
@@ -291,38 +294,24 @@ int main() {
         c = getchar();
         switch (c) {
                 case 't':
-                    /* IN: t <duração> <descrição>
-                       OUT: task <id> */
                     task_counter = caseT(time, task_counter, tasks);
                     break;
                 case 'l':
-                    /* IN: l [<id> <id> ...] 
-                       OUT: <id> <actividade> #<duração> <descrição>
-                       MOSTRA TAREFA */
                     caseL(task_counter, tasks);
                     break;
                 case 'n':
-                    /* n <duração> */
                     time = caseN(time);
                     break;
                 case 'u':
-                    /* u [<utilizador>] */
-                    /* GERIR UTILIZADORES */
                     user_counter = caseU(user_counter, users);
                     break;
                 case 'm':
-                    /* m <id> <utilizador> <atividade> */
-                    /* MOVE TAREFA */
-                    caseM(time, act_counter, user_counter, users, tasks);
+                    caseM();
                     break;
                 case 'd':
-                    /* d <atividade> */
-                    /* MOSTRA TAREFA NA ATIVIDADE */
                     caseD(act_counter, act);
                     break;
                 case 'a':
-                    /* a [<atividade>] */
-                    /* GERIR ATIVIDADES */
                     act_counter = caseA(act_counter, act);
                     break;
                 case 'q':
