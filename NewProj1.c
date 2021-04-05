@@ -23,10 +23,6 @@ typedef struct {
     char name[MAXUSERLEN];
 } User;
 
-/*############################## READ FUNCTIONS ##############################*/
-
-
-
 /*############################## CASE FUNCTIONS ##############################*/
 
 int caseT(int time, int task_counter, Task tasks[]) {
@@ -157,7 +153,8 @@ int caseU(int user_counter, User users[]) {
     }
 }
 
-void caseM(int act_counter, int id_list[], Task tasks[]) {
+/* TO DO */
+void caseM(int time, int act_counter, int user_counter, User users[], Task tasks[]) {
     int id, waste = 0, slack = 0, i, verifier = 0;
     char user[MAXUSERLEN], act[MAXACTLEN], c;
 
@@ -167,14 +164,38 @@ void caseM(int act_counter, int id_list[], Task tasks[]) {
     printf("ID:%d\nUSER:%s\nACT:%s\n", id, user, act);
 
     if (strcmp(act, "DONE") != 0) {
-        /* MOVE TAREFA */
+        waste = 0; /* ??? */
+        slack = waste - tasks[0].duration;
         return;
     }
 
-    for (i = 0; i < 4/*ID LIST LEN*/; i++) {
-
+    for (i = 0; i < user_counter; i++) {
+        if (strcmp(id, tasks[i].id) == 0) {
+            verifier = 1;
+        }
     }
     
+    if (verifier == 0) {
+        printf("no such task");
+        return;
+    }
+
+    if (strcmp(act, "TO DO") != 0) {
+        printf("task already started");
+        return;
+    }
+    
+    for (i = 0; i < user_counter; i++) {
+        if (strcmp(user, users[i].name) == 0) {
+            verifier = 1;
+        }
+    }
+    
+    if (verifier == 0) {
+        printf("no such user");
+        return;
+    }
+
     for (i = 0; i < act_counter; i++) {
         if (strcmp(act, tasks[i].activity) == 0) {
             verifier = 1;
@@ -185,8 +206,6 @@ void caseM(int act_counter, int id_list[], Task tasks[]) {
         printf("no such activity");
         return;
     }
-    /* ... */
-
 }
 
 void caseD(int act_counter, Activity act[]) {
@@ -294,7 +313,7 @@ int main() {
                 case 'm':
                     /* m <id> <utilizador> <atividade> */
                     /* MOVE TAREFA */
-                    caseM(act_counter, id_list, tasks);
+                    caseM(time, act_counter, user_counter, users, tasks);
                     break;
                 case 'd':
                     /* d <atividade> */
