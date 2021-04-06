@@ -4,10 +4,10 @@ AJUDA COM OS TABS/ESPAÇOS!!!
 
 INPUT:
 	t - +
-	l - 
+	l - +
 	n - +
 	u - + -
-	m - 
+	m - +
 	d - +
 	a - +
 	q - +
@@ -31,4 +31,15 @@ OUTPUT:
 	d -
 	a -
 	q - +
+
+EVERYTHING DONE (EXCETO PROBLEMA DE ESPAÇOS):
+	t - +
+	l - 
+	n - +
+	u - +
+	m -
+	d -
+	a -
+	q - +
+
 

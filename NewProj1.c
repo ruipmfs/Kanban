@@ -23,6 +23,37 @@ typedef struct {
     char name[MAXUSERLEN];
 } User;
 
+/*############################## AUX FUNCTIONS ##############################*/
+int readIdList(int id_list[]) {
+    char c;
+    int id = 0, list_size = 0, in_id = 1;
+
+    getchar();
+    while ((c = getchar()) != EOF && c != '\n') {
+        if (in_id == 1) {
+            if (c == ' ' || c == '\t') {
+                id_list[list_size] = id;
+                list_size++;
+                id = 0;
+                in_id = 0;
+            }
+            else {
+                id = id * 10 + (c - '0');
+            }
+        }
+        else {
+            if (c != ' ' && c != '\t') {
+                in_id = 1;
+                id = id * 10 + (c - '0');
+            }
+        }
+    }
+    id_list[list_size] = id;
+
+    return list_size;
+
+}
+
 /*############################## CASE FUNCTIONS ##############################*/
 
 int caseT(int time, int task_counter, Task tasks[]) {
@@ -69,24 +100,11 @@ int caseT(int time, int task_counter, Task tasks[]) {
 }
 
 void caseL(int task_counter, Task tasks[]) {
-    int id_list[MAXUSERS] = {0};
-    char c;
-    int id = 0, list_size = 0, i, j;
+    int list_size, i, j, id_list[MAXUSERS] = {0};
 
-    while ((c = getchar()) != EOF && c != '\n') {
-        if (c == ' ' || c == '\t') {
-            id_list[list_size] = id;
-            list_size++;
-            id = 0;
-        }
-        else {
-            id = id * 10 + (c - '0');
-        }
-    }
-    id_list[list_size] = id;
+    list_size = readIdList(id_list);
+    printf("%d %d %d", id_list[0], id_list[1], id_list[2]);
 
-    printf("%d %d %d", id_list[1], id_list[2], id_list[3]);
-    
     if (list_size == 0) {
         /*SORT*/
         for (i = 1; i < list_size; i++) {
