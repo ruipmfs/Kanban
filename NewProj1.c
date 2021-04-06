@@ -26,9 +26,8 @@ typedef struct {
 /*############################## AUX FUNCTIONS ##############################*/
 int readIdList(int id_list[]) {
     char c;
-    int id = 0, list_size = 0, in_id = 1;
+    int id = 0, list_size = 0, in_id = 0, empty_list = 1;
 
-    getchar();
     while ((c = getchar()) != EOF && c != '\n') {
         if (in_id == 1) {
             if (c == ' ' || c == '\t') {
@@ -39,6 +38,7 @@ int readIdList(int id_list[]) {
             }
             else {
                 id = id * 10 + (c - '0');
+                empty_list = 0;
             }
         }
         else {
@@ -48,11 +48,36 @@ int readIdList(int id_list[]) {
             }
         }
     }
-    id_list[list_size] = id;
 
+    if (empty_list == 0) {
+        id_list[list_size] = id;
+        list_size++;
+    }
     return list_size;
-
 }
+
+/*char readUser() {
+    char c, user[MAXUSERLEN];
+    int in_user = 0, i = 0;
+
+    while ((c = getchar()) != EOF && c != '\n') {
+        if (in_user == 1) {
+            if (c != ' ' && c != '\t') {
+                user[i] = c;
+                i++;
+            }
+            else {
+                break;
+            }
+        }
+        else {
+            if (c != ' ' && c != '\t') {
+                user[i] = c;
+                i++;
+            }
+        }
+    }
+}*/
 
 /*############################## CASE FUNCTIONS ##############################*/
 
@@ -100,14 +125,14 @@ int caseT(int time, int task_counter, Task tasks[]) {
 }
 
 void caseL(int task_counter, Task tasks[]) {
-    int list_size, i, j, id_list[MAXUSERS] = {0};
+    int list_size, i, j, id_list[MAXUSERS];
 
     list_size = readIdList(id_list);
     printf("%d %d %d", id_list[0], id_list[1], id_list[2]);
 
     if (list_size == 0) {
         /*SORT*/
-        for (i = 1; i < list_size; i++) {
+        for (i = 0; i < list_size; i++) {
             printf("%d %s #%d %s\n", tasks[i].id, tasks[i].activity, tasks[i].duration, tasks[i].description);
             return;
         }
@@ -128,7 +153,6 @@ int caseN(int time) {
     int add_time, verifier = 0;
     char c;
 
-    getchar();
     verifier = scanf("%d", &add_time);
     while ((c = getchar()) != EOF && c != '\n');
     if (verifier != 1 || add_time < 0) {
@@ -146,7 +170,9 @@ int caseU(int user_counter, User users[]) {
     char c;
     int i = 0, test = 0;
 
+    getchar();
     test = scanf("%20[^\n]", new_user.name);
+    printf("%s", new_user.name);
     while ((c = getchar()) != EOF && c != '\n');
 
     if (test == 0) {
@@ -233,7 +259,7 @@ void caseD(int act_counter, Activity act[]) {
     char activity[MAXACTLEN], c;
     int i;
 
-    scanf("20%[^\n]", activity);
+    scanf("%20[^\n]", activity);
     while ((c = getchar()) != EOF && c != '\n');
 
     for (i = 0; i < act_counter; i++) {
@@ -249,36 +275,44 @@ void caseD(int act_counter, Activity act[]) {
 
 int caseA(int act_counter, Activity act[]) {
     Activity new_a;
-    int i, j;
+    int i, test = 0;
     char c;
 
     getchar();
-    scanf("20%[^\n]", new_a.name);
+    test = scanf("%20[^\n]", new_a.name);
     while ((c = getchar()) != EOF && c != '\n');
-
-    if (act_counter >= MAXACT) {
-        printf("too many activities");
+    
+    if (test == 0) {
+        for (i = 0; i < act_counter; i++) {
+            printf("%s\n", act[i].name);
+        }
         return act_counter;
     }
 
-    for (j = 0; new_a.name[j] != '\0'; j++) {
-        if (islower(new_a.name[j]) != 0) {
-            printf("invalid description");
+    else {
+        if (act_counter >= MAXACT) {
+            printf("too many activities");
             return act_counter;
         }
-    }
 
-    for (i = 0; i < act_counter; i++) {
-        if (strcmp(act[i].name, new_a.name) == 0) {
-            printf("duplicate activity");
-            return act_counter;
+        for (i = 0; new_a.name[i] != '\0'; i++) {
+            if (islower(new_a.name[i]) != 0) {
+                printf("invalid description");
+                return act_counter;
+            }
         }
-    }
 
-    strcpy(act[act_counter].name, new_a.name);
-    act_counter++;
-    printf("%s\n%s\n%s\n%s\n", act[0].name, act[1].name, act[2].name, act[3].name);
-    return act_counter;
+        for (i = 0; i < act_counter; i++) {
+            if (strcmp(act[i].name, new_a.name) == 0) {
+                printf("duplicate activity");
+                return act_counter;
+            }
+        }
+
+        strcpy(act[act_counter].name, new_a.name);
+        act_counter++;
+        return act_counter;
+    }
 }
 
 /*############################## MAIN FUNCTIONS ##############################*/
