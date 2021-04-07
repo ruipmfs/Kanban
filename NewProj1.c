@@ -171,12 +171,9 @@ int caseU(int user_counter, User users[]) {
     int i = 0, state = 0;
 
     while ((c = getchar()) != EOF && c != '\n') {
-        if (c != ' ' && c != '\t') {
-            state = scanf("%20s", new_user.name);
-            printf("%s", new_user.name);
-        }
+        state = scanf("%20s[^ \n]", new_user.name);
+        printf("%s", new_user.name);
     }
-    
 
     if (state == 0) {
         for (i = 0; i < user_counter; i++) {
@@ -262,8 +259,10 @@ void caseD(int act_counter, Activity act[]) {
     char activity[MAXACTLEN], c;
     int i;
 
-    scanf("%20[^\n]", activity);
-    while ((c = getchar()) != EOF && c != '\n');
+    while ((c = getchar()) != EOF && c != '\n') {
+        scanf("%20[^\n]", activity);
+        printf("%s", activity);
+    }
 
     for (i = 0; i < act_counter; i++) {
         if (strcmp(activity, act[i].name) == 0) {
@@ -278,14 +277,15 @@ void caseD(int act_counter, Activity act[]) {
 
 int caseA(int act_counter, Activity act[]) {
     Activity new_a;
-    int i, test = 0;
+    int i, state = 0;
     char c;
 
-    getchar();
-    test = scanf("%20[^\n]", new_a.name);
-    while ((c = getchar()) != EOF && c != '\n');
+    while ((c = getchar()) != EOF && c != '\n') {
+        state = scanf("%20[^\n]", new_a.name);
+        printf("%s", new_a.name);
+    }
 
-    if (test == 0) {
+    if (state == 0) {
         for (i = 0; i < act_counter; i++) {
             printf("%s\n", act[i].name);
         }
