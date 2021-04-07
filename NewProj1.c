@@ -168,14 +168,17 @@ int caseN(int time) {
 int caseU(int user_counter, User users[]) {
     User new_user;
     char c;
-    int i = 0, test = 0;
+    int i = 0, state = 0;
 
-    getchar();
-    test = scanf("%20[^\n]", new_user.name);
-    printf("%s", new_user.name);
-    while ((c = getchar()) != EOF && c != '\n');
+    while ((c = getchar()) != EOF && c != '\n') {
+        if (c != ' ' && c != '\t') {
+            state = scanf("%20s", new_user.name);
+            printf("%s", new_user.name);
+        }
+    }
+    
 
-    if (test == 0) {
+    if (state == 0) {
         for (i = 0; i < user_counter; i++) {
             printf("%s\n", users[i].name);
         }
@@ -281,7 +284,7 @@ int caseA(int act_counter, Activity act[]) {
     getchar();
     test = scanf("%20[^\n]", new_a.name);
     while ((c = getchar()) != EOF && c != '\n');
-    
+
     if (test == 0) {
         for (i = 0; i < act_counter; i++) {
             printf("%s\n", act[i].name);
