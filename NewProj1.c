@@ -80,7 +80,7 @@ int verifyUser(int user_counter, char user[], User users[]) {
 int verifyAct(int act_counter, char activity[], Activity act[]) {
     int i, valid_act = 0;
     for (i = 0; i < act_counter; i++) {
-        if (strcmp(act, tasks[i].activity) == 0) {
+        if (strcmp(activity, act[i].name) == 0) {
             valid_act = 1;
         }
     }
@@ -112,7 +112,7 @@ int verifyAct(int act_counter, char activity[], Activity act[]) {
 
 /*############################## CASE FUNCTIONS ##############################*/
 
-int caseT(int time, int task_counter, Task tasks[]) {
+int caseT(int task_counter, Task tasks[]) {
     int duration, i;
     char description[MAXDESC], c;
     Task t;
@@ -232,7 +232,7 @@ int caseU(int user_counter, User users[]) {
 }
 
 void caseM(int time, int task_counter, int user_counter, int act_counter, Task tasks[], User users[], Activity act[]) {
-    int id, i, valid_id = 0, gasto, slack, id_task;
+    int id, i, gasto, slack;
     char user[MAXUSERLEN], activity[MAXACTLEN], c;
 
     scanf("%d %20s %20[^\n]", &id, user, activity);
@@ -252,25 +252,24 @@ void caseM(int time, int task_counter, int user_counter, int act_counter, Task t
         printf("no such user");
         return;
     }
-    else if (!verifyAct(act_counter, act, activity)) {
+    else if (!verifyAct(act_counter, activity, act)) {
         printf("no such activity");
         return;
     }
     else {
-        if (strcmp(activity, "DONE") == 0) {
-            gasto = 0;
-            slack = 0;
-            return;
-        }
-        else {
-            for (i = 0; i < task_counter; i++) {
-                if (id == tasks[i].id) {
-                    if (strcmp(tasks[i].activity, "TO DO") == 0) {
-                        tasks[i].start_inst = time;
-                    }
-                    strcpy(tasks[i].activity, activity);
+        for (i = 0; i < task_counter; i++) {
+            if (id == tasks[i].id) {
+                if (strcmp(activity, "DONE") == 0) {
+                    gasto = time - tasks[i].start_inst;
+                    slack = gasto - tasks[i].duration;
+                    printf("duration=%d slack=%d", gasto, slack);
                     return;
                 }
+                else if (strcmp(tasks[i].activity, "TO DO") == 0) {
+                    tasks[i].start_inst = time;
+                }
+                strcpy(tasks[i].activity, activity);
+                return;
             }
         }
     }
@@ -370,7 +369,7 @@ int main() {
         c = getchar();
         switch (c) {
                 case 't':
-                    task_counter = caseT(time, task_counter, tasks);
+                    task_counter = caseT(task_counter, tasks);
                     break;
                 case 'l':
                     caseL(task_counter, tasks);
@@ -382,7 +381,7 @@ int main() {
                     user_counter = caseU(user_counter, users);
                     break;
                 case 'm':
-                    caseM();
+                    caseM(time, task_counter, user_counter, act_counter, tasks, users, act);
                     break;
                 case 'd':
                     caseD(act_counter, act);
