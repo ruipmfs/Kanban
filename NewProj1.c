@@ -56,6 +56,37 @@ int readIdList(int id_list[]) {
     return list_size;
 }
 
+int verifyID(int task_counter, int id, Task tasks[]) {
+    int i, valid_id = 0;
+
+    for (i = 0; i < task_counter; i++) {
+        if (id == tasks[i].id) {
+            valid_id = 1;
+        }
+    }
+    return valid_id;
+}
+
+int verifyUser(int user_counter, char user[], User users[]) {
+    int i, valid_user = 0;
+    for (i = 0; i < user_counter; i++) {
+        if (strcmp(user, users[i].name) == 0) {
+            valid_user = 1;
+        }
+    }
+    return valid_user;
+}
+
+int verifyAct(int act_counter, char activity[], Activity act[]) {
+    int i, valid_act = 0;
+    for (i = 0; i < act_counter; i++) {
+        if (strcmp(act, tasks[i].activity) == 0) {
+            valid_act = 1;
+        }
+    }
+    return valid_act;
+}
+
 /*char readUser() {
     char c, user[MAXUSERLEN];
     int in_user = 0, i = 0;
@@ -111,7 +142,7 @@ int caseT(int time, int task_counter, Task tasks[]) {
 
     t.duration = duration;
     t.id = task_counter + 1;
-    t.start_inst = time;
+    t.start_inst = 0;
     strcpy(t.description, description);
     strcpy(t.activity, "TO DO");
 
@@ -170,7 +201,7 @@ int caseU(int user_counter, User users[]) {
     char c;
     int i = 0, state = 0;
 
-    while ((c = getchar()) != EOF && c != '\n') {
+    while ((c = getchar()) != '\n') {
         state = scanf("%20s[^ \n]", new_user.name);
         printf("%s", new_user.name);
     }
@@ -200,59 +231,49 @@ int caseU(int user_counter, User users[]) {
     }
 }
 
-/* TO DO */
-void caseM() {
-    int id;
-    char user[MAXUSERLEN], act[MAXACTLEN], c;
+void caseM(int time, int task_counter, int user_counter, int act_counter, Task tasks[], User users[], Activity act[]) {
+    int id, i, valid_id = 0, gasto, slack, id_task;
+    char user[MAXUSERLEN], activity[MAXACTLEN], c;
 
-    scanf("%d %20s %20[^\n]", &id, user, act);
+    scanf("%d %20s %20[^\n]", &id, user, activity);
     while ((c = getchar()) != EOF && c != '\n');
 
-    printf("ID:%d\nUSER:%s\nACT:%s\n", id, user, act);
+    printf("ID:%d\nUSER:%s\nACT:%s\n", id, user, activity);
 
-    /*if (strcmp(act, "DONE") != 0) {
-        waste = 0;
-        slack = waste - tasks[0].duration;
-        return;
-    }
-
-    for (i = 0; i < user_counter; i++) {
-        if (strcmp(id, tasks[i].id) == 0) {
-            verifier = 1;
-        }
-    }
-    
-    if (verifier == 0) {
+    if (!verifyID(task_counter, id, tasks)) {
         printf("no such task");
         return;
     }
-
-    if (strcmp(act, "TO DO") != 0) {
+    else if (strcmp(activity, "TO DO") == 0) {
         printf("task already started");
         return;
     }
-    
-    for (i = 0; i < user_counter; i++) {
-        if (strcmp(user, users[i].name) == 0) {
-            verifier = 1;
-        }
-    }
-    
-    if (verifier == 0) {
+    else if (!verifyUser(user_counter, user, users)) {
         printf("no such user");
         return;
     }
-
-    for (i = 0; i < act_counter; i++) {
-        if (strcmp(act, tasks[i].activity) == 0) {
-            verifier = 1;
-        }
-    }
-
-    if (verifier == 0) {
+    else if (!verifyAct(act_counter, act, activity)) {
         printf("no such activity");
         return;
-    }*/
+    }
+    else {
+        if (strcmp(activity, "DONE") == 0) {
+            gasto = 0;
+            slack = 0;
+            return;
+        }
+        else {
+            for (i = 0; i < task_counter; i++) {
+                if (id == tasks[i].id) {
+                    if (strcmp(tasks[i].activity, "TO DO") == 0) {
+                        tasks[i].start_inst = time;
+                    }
+                    strcpy(tasks[i].activity, activity);
+                    return;
+                }
+            }
+        }
+    }
 }
 
 void caseD(int act_counter, Activity act[]) {
