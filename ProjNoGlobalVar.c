@@ -24,15 +24,6 @@ typedef struct {
 } User;
 
 /*############################## AUX FUNCTIONS ##############################*/
-
-Task tasks[MAXTASKS];
-Activity act[MAXACT];
-User users[MAXUSERS];
-
-int time = 0, task_counter = 0, act_counter = 3, user_counter = 0;
-
-/*############################## AUX FUNCTIONS ##############################*/
-
 int readIdList(int id_list[]) {
     char c;
     int id = 0, list_size = 0, in_id = 0, empty_list = 1;
@@ -65,7 +56,7 @@ int readIdList(int id_list[]) {
     return list_size;
 }
 
-int verifyID(int id) {
+int verifyID(int task_counter, int id, Task tasks[]) {
     int i, valid_id = 0;
 
     for (i = 0; i < task_counter; i++) {
@@ -76,7 +67,7 @@ int verifyID(int id) {
     return valid_id;
 }
 
-int verifyUser(char user[]) {
+int verifyUser(int user_counter, char user[], User users[]) {
     int i, valid_user = 0;
     for (i = 0; i < user_counter; i++) {
         if (strcmp(user, users[i].name) == 0) {
@@ -86,7 +77,7 @@ int verifyUser(char user[]) {
     return valid_user;
 }
 
-int verifyAct(char activity[]) {
+int verifyAct(int act_counter, char activity[], Activity act[]) {
     int i, valid_act = 0;
     for (i = 0; i < act_counter; i++) {
         if (strcmp(activity, act[i].name) == 0) {
@@ -96,9 +87,31 @@ int verifyAct(char activity[]) {
     return valid_act;
 }
 
+/*char readUser() {
+    char c, user[MAXUSERLEN];
+    int in_user = 0, i = 0;
+    while ((c = getchar()) != EOF && c != '\n') {
+        if (in_user == 1) {
+            if (c != ' ' && c != '\t') {
+                user[i] = c;
+                i++;
+            }
+            else {
+                break;
+            }
+        }
+        else {
+            if (c != ' ' && c != '\t') {
+                user[i] = c;
+                i++;
+            }
+        }
+    }
+}*/
+
 /*############################## CASE FUNCTIONS ##############################*/
 
-void caseT() {
+int caseT(int task_counter, Task tasks[]) {
     int duration, i;
     char description[MAXDESC], c;
     Task t;
@@ -111,19 +124,19 @@ void caseT() {
 
     if (task_counter >= MAXTASKS) {
         printf("too many tasks");
-        return;
+        return task_counter;
     }
     
     for (i = 0; i <= task_counter; i++) {
         if (strcmp(description, tasks[i].description) == 0) {
             printf("duplicate description");
-            return;
+            return task_counter;
         }
     }
 
     if (duration <= 0) {
         printf("invalid duration");
-        return;
+        return task_counter;
     }
 
     t.duration = duration;
@@ -138,10 +151,10 @@ void caseT() {
 
     printf("task %d", t.id);
 
-    return;
+    return task_counter;
 }
 
-void caseL() {
+void caseL(int task_counter, Task tasks[]) {
     int list_size, i, j, id_list[MAXUSERS];
 
     list_size = readIdList(id_list);
@@ -166,7 +179,7 @@ void caseL() {
     }
 }
 
-void caseN() {
+int caseN(int time) {
     int add_time, verifier = 0;
     char c;
 
@@ -174,16 +187,15 @@ void caseN() {
     while ((c = getchar()) != EOF && c != '\n');
     if (verifier != 1 || add_time < 0) {
         printf("invalid time");
-        return;
+        return time;
     }
     else {
         printf("%d", (time + add_time));
-        time += add_time;
-        return;
+        return (time + add_time);
     }
 }
 
-void caseU() {
+int caseU(int user_counter, User users[]) {
     User new_user;
     char c;
     int i = 0, state = 0;
@@ -197,28 +209,28 @@ void caseU() {
         for (i = 0; i < user_counter; i++) {
             printf("%s\n", users[i].name);
         }
-        return;
+        return user_counter;
     }
     else {
         if (user_counter >= MAXUSERS) {
             printf("too many users");
-            return;
+            return user_counter;
         }
 
         for (i = 0; i <= user_counter; i++) {
             if (strcmp(new_user.name, users[i].name) == 0) {
                 printf("user already exists");
-                return;
+                return user_counter;
             }
         }
         
         strcpy(users[user_counter].name, new_user.name);
         user_counter++;
-        return;
+        return user_counter;
     }
 }
 
-void caseM() {
+void caseM(int time, int task_counter, int user_counter, int act_counter, Task tasks[], User users[], Activity act[]) {
     int id, i, gasto, slack;
     char user[MAXUSERLEN], activity[MAXACTLEN], c;
 
@@ -227,7 +239,7 @@ void caseM() {
 
     printf("ID:%d\nUSER:%s\nACT:%s\n", id, user, activity);
 
-    if (!verifyID(id)) {
+    if (!verifyID(task_counter, id, tasks)) {
         printf("no such task");
         return;
     }
@@ -235,11 +247,11 @@ void caseM() {
         printf("task already started");
         return;
     }
-    else if (!verifyUser(user)) {
+    else if (!verifyUser(user_counter, user, users)) {
         printf("no such user");
         return;
     }
-    else if (!verifyAct(activity)) {
+    else if (!verifyAct(act_counter, activity, act)) {
         printf("no such activity");
         return;
     }
@@ -262,7 +274,7 @@ void caseM() {
     }
 }
 
-void caseD() {
+void caseD(int act_counter, Activity act[]) {
     char activity[MAXACTLEN], c;
     int i;
 
@@ -282,7 +294,7 @@ void caseD() {
     return;
 }
 
-void caseA() {
+int caseA(int act_counter, Activity act[]) {
     Activity new_a;
     int i, state = 0;
     char c;
@@ -296,32 +308,32 @@ void caseA() {
         for (i = 0; i < act_counter; i++) {
             printf("%s\n", act[i].name);
         }
-        return;
+        return act_counter;
     }
 
     else {
         if (act_counter >= MAXACT) {
             printf("too many activities");
-            return;
+            return act_counter;
         }
 
         for (i = 0; new_a.name[i] != '\0'; i++) {
             if (islower(new_a.name[i]) != 0) {
                 printf("invalid description");
-                return;
+                return act_counter;
             }
         }
 
         for (i = 0; i < act_counter; i++) {
             if (strcmp(act[i].name, new_a.name) == 0) {
                 printf("duplicate activity");
-                return;
+                return act_counter;
             }
         }
 
         strcpy(act[act_counter].name, new_a.name);
         act_counter++;
-        return;
+        return act_counter;
     }
 }
 
@@ -342,36 +354,39 @@ void displayMenu() {
 
 int main() {
     char c;
-    int exit = 0;
+    int exit = 0, time = 0, task_counter = 0, act_counter = 3, user_counter = 0;
+    Task tasks[MAXTASKS];
+    Activity act[MAXACT];
+    User users[MAXUSERS];
 
     strcpy(act[0].name, "TO DO");
     strcpy(act[1].name, "IN PROGRESS");
     strcpy(act[2].name, "DONE");
-    
+
     while (!exit) {
         displayMenu();
         c = getchar();
         switch (c) {
                 case 't':
-                    caseT();
+                    task_counter = caseT(task_counter, tasks);
                     break;
                 case 'l':
-                    caseL();
+                    caseL(task_counter, tasks);
                     break;
                 case 'n':
-                    caseN();
+                    time = caseN(time);
                     break;
                 case 'u':
-                    caseU();
+                    user_counter = caseU(user_counter, users);
                     break;
                 case 'm':
-                    caseM();
+                    caseM(time, task_counter, user_counter, act_counter, tasks, users, act);
                     break;
                 case 'd':
-                    caseD();
+                    caseD(act_counter, act);
                     break;
                 case 'a':
-                    caseA();
+                    act_counter = caseA(act_counter, act);
                     break;
                 case 'q':
                     exit = 1;
