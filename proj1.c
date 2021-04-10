@@ -8,7 +8,7 @@
 #define MAXACT 10
 #define MAXACTLEN 21
 #define MAXUSERLEN 21
-#define MAXTASKS 20
+#define MAXTASKS 10000
 
 typedef struct {
     int id, duration, start_inst;
@@ -38,7 +38,7 @@ int readIdList(int id_list[]) {
     int id = 0, list_size = 0, in_id = 0, empty_list = 1;
 
     while ((c = getchar()) != EOF && c != '\n') {
-        if (in_id == 1) {
+        if (in_id) {
             if (c == ' ' || c == '\t') {
                 id_list[list_size] = id;
                 list_size++;
@@ -50,15 +50,14 @@ int readIdList(int id_list[]) {
                 empty_list = 0;
             }
         }
-        else {
-            if (c != ' ' && c != '\t') {
-                in_id = 1;
-                id = id * 10 + (c - '0');
-            }
+        else if (c != ' ' && c != '\t') {
+            in_id = 1;
+            id = id * 10 + (c - '0');
+            empty_list = 0;
         }
     }
 
-    if (empty_list == 0) {
+    if (!empty_list && in_id) {
         id_list[list_size] = id;
         list_size++;
     }
@@ -108,19 +107,19 @@ void caseT() {
     while ((c = getchar()) != EOF && c != '\n');
 
     if (task_counter >= MAXTASKS) {
-        printf("too many tasks");
+        printf("too many tasks\n");
         return;
     }
     
     for (i = 0; i <= task_counter; i++) {
         if (strcmp(description, tasks[i].description) == 0) {
-            printf("duplicate description");
+            printf("duplicate description\n");
             return;
         }
     }
 
     if (duration <= 0) {
-        printf("invalid duration");
+        printf("invalid duration\n");
         return;
     }
 
@@ -133,9 +132,7 @@ void caseT() {
     tasks[task_counter] = t;
     task_counter++;
 
-    printf("task %d", t.id);
-
-    return;
+    printf("task %d\n", t.id);
 }
 
 void caseL() {
@@ -145,17 +142,15 @@ void caseL() {
 
     if (list_size == 0) {
         /*SORT*/
-        for (i = 0; i < list_size; i++) {
+        for (i = 0; i < task_counter; i++) {
             printf("%d %s #%d %s\n", tasks[i].id, tasks[i].activity, tasks[i].duration, tasks[i].description);
-            return;
         }
     }
     else {
-        for (i = 0; i < list_size; i++) {
-            for (j = 0; j < task_counter; j++) {
-                if (tasks[j].id == id_list[i]) {
-                    printf("%d %s #%d %s\n", tasks[j].id, tasks[j].activity, tasks[j].duration, tasks[j].description);
-                    return;
+        for (i = 0; i < task_counter; i++) {
+            for (j = 0; j < list_size; j++) {
+                if (tasks[i].id == id_list[j]) {
+                    printf("%d %s #%d %s\n", tasks[i].id, tasks[i].activity, tasks[i].duration, tasks[i].description);
                 }
             }
         }
@@ -169,11 +164,11 @@ void caseN() {
     verifier = scanf("%d", &add_time);
     while ((c = getchar()) != EOF && c != '\n');
     if (verifier != 1 || add_time < 0) {
-        printf("invalid time");
+        printf("invalid time\n");
         return;
     }
     else {
-        printf("%d", (time + add_time));
+        printf("%d\n", (time + add_time));
         time += add_time;
         return;
     }
@@ -196,13 +191,13 @@ void caseU() {
     }
     else {
         if (user_counter >= MAXUSERS) {
-            printf("too many users");
+            printf("too many users\n");
             return;
         }
 
         for (i = 0; i <= user_counter; i++) {
             if (strcmp(new_user.name, users[i].name) == 0) {
-                printf("user already exists");
+                printf("user already exists\n");
                 return;
             }
         }
@@ -215,40 +210,40 @@ void caseU() {
 
 void caseM() {
     int id, i, gasto, slack;
-    char user[MAXUSERLEN], activity[MAXACTLEN], c;
+    char user[MAXUSERLEN], next_activity[MAXACTLEN], c;
 
-    scanf("%d %20s %20[^\n]", &id, user, activity);
+    scanf("%d %20s %20[^\n]", &id, user, next_activity);
     while ((c = getchar()) != EOF && c != '\n');
 
     if (!verifyID(id)) {
-        printf("no such task");
+        printf("no such task\n");
         return;
     }
-    else if (strcmp(activity, "TO DO") == 0) {
-        printf("task already started");
+    else if (strcmp(next_activity, "TO DO") == 0) {
+        printf("task already started\n");
         return;
     }
     else if (!verifyUser(user)) {
-        printf("no such user");
+        printf("no such user\n");
         return;
     }
-    else if (!verifyAct(activity)) {
-        printf("no such activity");
+    else if (!verifyAct(next_activity)) {
+        printf("no such activity\n");
         return;
     }
     else {
         for (i = 0; i < task_counter; i++) {
             if (id == tasks[i].id) {
-                if (strcmp(activity, "DONE") == 0) {
-                    gasto = time - tasks[i].start_inst;
-                    slack = gasto - tasks[i].duration;
-                    printf("duration=%d slack=%d", gasto, slack);
-                    return;
-                }
-                else if (strcmp(tasks[i].activity, "TO DO") == 0) {
+                if (strcmp(tasks[i].activity, "TO DO") == 0) {
                     tasks[i].start_inst = time;
                 }
-                strcpy(tasks[i].activity, activity);
+                if (strcmp(next_activity, "DONE") == 0) {
+                    gasto = time - tasks[i].start_inst;
+                    slack = gasto - tasks[i].duration;
+                    printf("duration=%d slack=%d\n", gasto, slack);
+                    return;
+                }
+                strcpy(tasks[i].activity, next_activity);
                 return;
             }
         }
@@ -270,7 +265,7 @@ void caseD() {
         }
     }
 
-    printf("no such activity");
+    printf("no such activity\n");
     return;
 }
 
@@ -292,20 +287,20 @@ void caseA() {
 
     else {
         if (act_counter >= MAXACT) {
-            printf("too many activities");
+            printf("too many activities\n");
             return;
         }
 
         for (i = 0; new_a.name[i] != '\0'; i++) {
             if (islower(new_a.name[i]) != 0) {
-                printf("invalid description");
+                printf("invalid description\n");
                 return;
             }
         }
 
         for (i = 0; i < act_counter; i++) {
             if (strcmp(act[i].name, new_a.name) == 0) {
-                printf("duplicate activity");
+                printf("duplicate activity\n");
                 return;
             }
         }
