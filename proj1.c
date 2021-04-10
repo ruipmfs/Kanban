@@ -23,7 +23,7 @@ typedef struct {
     char name[MAXUSERLEN];
 } User;
 
-/*############################## AUX FUNCTIONS ##############################*/
+/*############################## GLOBAL VARS ##############################*/
 
 Task tasks[MAXTASKS];
 Activity act[MAXACT];
@@ -106,8 +106,6 @@ void caseT() {
     scanf("%d %50[^\n]", &duration, description);
 
     while ((c = getchar()) != EOF && c != '\n');
-    
-    printf("Duration: %d, Description: %s\n", duration, description);
 
     if (task_counter >= MAXTASKS) {
         printf("too many tasks");
@@ -132,7 +130,6 @@ void caseT() {
     strcpy(t.description, description);
     strcpy(t.activity, "TO DO");
 
-    printf("%s\n", t.description);
     tasks[task_counter] = t;
     task_counter++;
 
@@ -145,7 +142,6 @@ void caseL() {
     int list_size, i, j, id_list[MAXUSERS];
 
     list_size = readIdList(id_list);
-    printf("%d %d %d", id_list[0], id_list[1], id_list[2]);
 
     if (list_size == 0) {
         /*SORT*/
@@ -190,7 +186,6 @@ void caseU() {
 
     while ((c = getchar()) != '\n') {
         state = scanf("%20s[^ \n]", new_user.name);
-        printf("%s", new_user.name);
     }
 
     if (state == 0) {
@@ -224,8 +219,6 @@ void caseM() {
 
     scanf("%d %20s %20[^\n]", &id, user, activity);
     while ((c = getchar()) != EOF && c != '\n');
-
-    printf("ID:%d\nUSER:%s\nACT:%s\n", id, user, activity);
 
     if (!verifyID(id)) {
         printf("no such task");
@@ -268,7 +261,6 @@ void caseD() {
 
     while ((c = getchar()) != EOF && c != '\n') {
         scanf("%20[^\n]", activity);
-        printf("%s", activity);
     }
 
     for (i = 0; i < act_counter; i++) {
@@ -289,7 +281,6 @@ void caseA() {
 
     while ((c = getchar()) != EOF && c != '\n') {
         state = scanf("%20[^\n]", new_a.name);
-        printf("%s", new_a.name);
     }
 
     if (state == 0) {
@@ -327,19 +318,6 @@ void caseA() {
 
 /*############################## MAIN FUNCTION ##############################*/
 
-void displayMenu() {
-    printf("\n**** K A N B A N ****\n");
-    printf("t - Criar tarefa\n");
-    printf("l - Mostrar tarefas\n");
-    printf("n - Avancar tempo\n");
-    printf("u - Gerir utilizadores\n");
-    printf("m - Mover tarefa\n");
-    printf("d - Mostrar tarefas na atividade\n");
-    printf("a - Gerir atividades\n");
-    printf("q - Sair\n");
-    printf("************************\n");
-}
-
 int main() {
     char c;
     int exit = 0;
@@ -349,7 +327,6 @@ int main() {
     strcpy(act[2].name, "DONE");
     
     while (!exit) {
-        displayMenu();
         c = getchar();
         switch (c) {
                 case 't':
