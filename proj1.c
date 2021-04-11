@@ -154,17 +154,15 @@ void sortByInstance(Task list[], int left, int right) {
        splitted array */
     int part;
     if (right > left) {
-        part = partition(list, left, right);
+        part = partitionByInstance(list, left, right);
 
         sortByInstance(list, left, part-1);
         sortByInstance(list, part+1, right);
     }
 }
 
-// INPUT: S1 S2  DIZER SE S1 ESTÁ ANTES DE S2 NA ORDEM ALFABETICA   OUTPUT: BOOL
 
-
-int partitionByInstance(Task list[], int start, int end) {
+int partitionByAlphabet(Task list[], int start, int end) {
     /* AUX Func. of the quicksort algorithm.
        Defines a pivot and sort the list given in the input by putting
        the minor numbers (num < pivot) on the left side of the pivot
@@ -173,9 +171,9 @@ int partitionByInstance(Task list[], int start, int end) {
     Task pivot = list[end], temp;
 
     while (i < j) {
-        while (list[i].start_inst <= pivot.start_inst && i < j)
+        while (list[i].description[0] <= pivot.description[0] && i < j)
             i++;
-        while (list[j].start_inst > pivot.start_inst && j > i)
+        while (list[j].description[0] > pivot.description[0] && j > i)
             j--;
         
         if (i < j) {
@@ -190,24 +188,18 @@ int partitionByInstance(Task list[], int start, int end) {
     return i;
 }
 
-void sortByInstance(Task list[], int left, int right) {
+void sortByAlphabet(Task list[], int left, int right) {
     /* Main func. of the sprt algorithm.
        Divides the array and call itself by recursion with the
        splitted array */
     int part;
     if (right > left) {
-        part = partition(list, left, right);
+        part = partitionByAlphabet(list, left, right);
 
-        sortByInstance(list, left, part-1);
-        sortByInstance(list, part+1, right);
+        sortByAlphabet(list, left, part-1);
+        sortByAlphabet(list, part+1, right);
     }
 }
-
-/*void sortStartInst(Task sort_list[], int sort_list_counter) {
-    int i, start_inst[MAXTASKS];
-
-    quicksort(sort_list.start_inst);
-}*/
 
 /*############################## CASE FUNCTIONS ##############################*/
 
@@ -393,7 +385,7 @@ void caseD() {
     }
 
     /* Error testing */
-    if (!verifyAct) {
+    if (!verifyAct(activity)) {
         printf("no such activity\n");
         return;
     }
@@ -406,9 +398,12 @@ void caseD() {
             }
         }
         /* SORT ORDEM NUMERICA DE INSTANTES INICIAIS */
-        sortStartInst(sort_list, sort_list_counter);
+        sortByInstance(sort_list, 0, sort_list_counter);
         /* SE DUAS ACTS TIVEREM INSTANTES INICIAIS IGUAIS, SORT POR ORDEM ALFABETICA DE DESC */
 
+        for (i = 0; i < sort_list_counter; i++) {
+            printf("%d %d %s", sort_list[i].id, sort_list[i].start_inst, sort_list[i].description);
+        }
     }
 }
 
