@@ -2,7 +2,7 @@
 #include <string.h>
 #include <ctype.h>
 
-#define MAXDESC 50
+#define MAXDESCLEN 51
 #define MAXID 1000
 #define MAXUSERS 50
 #define MAXACT 10
@@ -12,7 +12,7 @@
 
 typedef struct {
     int id, duration, start_inst;
-    char description[MAXDESC], user, activity[MAXACTLEN];
+    char description[MAXDESCLEN], user, activity[MAXACTLEN];
 } Task;
 
 typedef struct {
@@ -99,27 +99,56 @@ int verifyAct(char activity[]) {
     return valid_act;
 }
 
-int partition(int list[], int start, int end) {
+/*int extractStartInst(Task to_sort_list[], int sort_list_counter) {
+    int i, to_sort_startinst[MAXTASKS];
+
+    for (i = 0; i < sort_list_counter; i++) {
+        to_sort_startinst[i] = to_sort_list[i].start_inst;
+    }
+    return to_sort_startinst;
+}
+
+Task sortedTasks(Task to_sort_list[], int sorted_startinst[], int sort_list_counter) {
+    Task sorted[MAXTASKS];
+    int i, j, counter = 0;
+
+    for (i = 0; i < sort_list_counter; i++) {
+        for (j = 0; j < sort_list_counter; j++) {
+            if (to_sort_list[i].start_inst == sorted_startinst[j]) {
+                sorted[counter] = to_sort_list[i];
+            }
+        }
+    }
+    return sorted;
+}*/
+
+int partitionByInstance(Task list[], int start, int end) {
     /* AUX Func. of the quicksort algorithm.
        Defines a pivot and sort the list given in the input by putting
        the minor numbers (num < pivot) on the left side of the pivot
        and the major numbers (num < pivot) on the right side of the pivot */
-    int pivot = list[end], i = start, temp, j;
-    for (j = start; j < end; j++) {
-        if (list[j] <= pivot) {
-            temp = list[j];
-            list[j] = list[i];
-            list[i] = temp;
-            i += 1;
+    int i = start, j = end-1;
+    Task pivot = list[end], temp;
+
+    while (i < j) {
+        while (list[i].start_inst <= pivot.start_inst && i < j)
+            i++;
+        while (list[j].start_inst > pivot.start_inst && j > i)
+            j--;
+        
+        if (i < j) {
+            temp = list[i];
+            list[i] = list[j];
+            list[j] = temp;
         }
     }
-    temp = list[end];
-    list[end] = list[i];
-    list[i] = temp;
+    temp = list[i];
+    list[i] = list[end];
+    list[end] = temp;
     return i;
 }
 
-void quicksort(int list[], int left, int right) {
+void sortByInstance(Task list[], int left, int right) {
     /* Main func. of the sprt algorithm.
        Divides the array and call itself by recursion with the
        splitted array */
@@ -127,8 +156,50 @@ void quicksort(int list[], int left, int right) {
     if (right > left) {
         part = partition(list, left, right);
 
-        quicksort(list, left, part-1);
-        quicksort(list, part+1, right);
+        sortByInstance(list, left, part-1);
+        sortByInstance(list, part+1, right);
+    }
+}
+
+// INPUT: S1 S2  DIZER SE S1 ESTÁ ANTES DE S2 NA ORDEM ALFABETICA   OUTPUT: BOOL
+
+
+int partitionByInstance(Task list[], int start, int end) {
+    /* AUX Func. of the quicksort algorithm.
+       Defines a pivot and sort the list given in the input by putting
+       the minor numbers (num < pivot) on the left side of the pivot
+       and the major numbers (num < pivot) on the right side of the pivot */
+    int i = start, j = end-1;
+    Task pivot = list[end], temp;
+
+    while (i < j) {
+        while (list[i].start_inst <= pivot.start_inst && i < j)
+            i++;
+        while (list[j].start_inst > pivot.start_inst && j > i)
+            j--;
+        
+        if (i < j) {
+            temp = list[i];
+            list[i] = list[j];
+            list[j] = temp;
+        }
+    }
+    temp = list[i];
+    list[i] = list[end];
+    list[end] = temp;
+    return i;
+}
+
+void sortByInstance(Task list[], int left, int right) {
+    /* Main func. of the sprt algorithm.
+       Divides the array and call itself by recursion with the
+       splitted array */
+    int part;
+    if (right > left) {
+        part = partition(list, left, right);
+
+        sortByInstance(list, left, part-1);
+        sortByInstance(list, part+1, right);
     }
 }
 
@@ -143,7 +214,7 @@ void quicksort(int list[], int left, int right) {
 void caseT() {
     /* Main func. of the command 't' */
     int duration, i;
-    char description[MAXDESC], c;
+    char description[MAXDESCLEN], c;
     Task t;
     
     scanf("%d %50[^\n]", &duration, description);
