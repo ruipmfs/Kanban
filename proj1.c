@@ -37,6 +37,7 @@ int readIdList(int id_list[]) {
     char c;
     int id = 0, list_size = 0, in_id = 0, empty_list = 1;
 
+    /* Reads the array char by char */
     while ((c = getchar()) != EOF && c != '\n') {
         if (in_id) {
             if (c == ' ' || c == '\t') {
@@ -56,7 +57,6 @@ int readIdList(int id_list[]) {
             empty_list = 0;
         }
     }
-
     if (!empty_list && in_id) {
         id_list[list_size] = id;
         list_size++;
@@ -65,6 +65,8 @@ int readIdList(int id_list[]) {
 }
 
 int verifyID(int id) {
+    /* Verifies if the input (ID) is contained in the Tasks
+       (check if the task is valid) */
     int i, valid_id = 0;
 
     for (i = 0; i < task_counter; i++) {
@@ -76,6 +78,7 @@ int verifyID(int id) {
 }
 
 int verifyUser(char user[]) {
+    /* Verifies if the input (User) is contained in the listed Users */
     int i, valid_user = 0;
     for (i = 0; i < user_counter; i++) {
         if (strcmp(user, users[i].name) == 0) {
@@ -86,6 +89,7 @@ int verifyUser(char user[]) {
 }
 
 int verifyAct(char activity[]) {
+    /* Verifies if the input (Activity) is contained in the listed Activities */
     int i, valid_act = 0;
     for (i = 0; i < act_counter; i++) {
         if (strcmp(activity, act[i].name) == 0) {
@@ -95,17 +99,58 @@ int verifyAct(char activity[]) {
     return valid_act;
 }
 
+int partition(int list[], int start, int end) {
+    /* AUX Func. of the quicksort algorithm.
+       Defines a pivot and sort the list given in the input by putting
+       the minor numbers (num < pivot) on the left side of the pivot
+       and the major numbers (num < pivot) on the right side of the pivot */
+    int pivot = list[end], i = start, temp, j;
+    for (j = start; j < end; j++) {
+        if (list[j] <= pivot) {
+            temp = list[j];
+            list[j] = list[i];
+            list[i] = temp;
+            i += 1;
+        }
+    }
+    temp = list[end];
+    list[end] = list[i];
+    list[i] = temp;
+    return i;
+}
+
+void quicksort(int list[], int left, int right) {
+    /* Main func. of the sprt algorithm.
+       Divides the array and call itself by recursion with the
+       splitted array */
+    int part;
+    if (right > left) {
+        part = partition(list, left, right);
+
+        quicksort(list, left, part-1);
+        quicksort(list, part+1, right);
+    }
+}
+
+/*void sortStartInst(Task sort_list[], int sort_list_counter) {
+    int i, start_inst[MAXTASKS];
+
+    quicksort(sort_list.start_inst);
+}*/
+
 /*############################## CASE FUNCTIONS ##############################*/
 
 void caseT() {
+    /* Main func. of the command 't' */
     int duration, i;
     char description[MAXDESC], c;
     Task t;
     
     scanf("%d %50[^\n]", &duration, description);
 
-    while ((c = getchar()) != EOF && c != '\n');
+    while ((c = getchar()) != EOF && c != '\n'); /* Read the remaining char(s) in the line */
 
+    /* Error testing */
     if (task_counter >= MAXTASKS) {
         printf("too many tasks\n");
         return;
@@ -136,16 +181,20 @@ void caseT() {
 }
 
 void caseL() {
-    int list_size, i, j, id_list[MAXUSERS];
+    /* Main func. of the command 'l' */
+    int list_size, i, j, id_list[MAXTASKS];
 
+    /* Reads the ID's of the input and returns the size of the array */
     list_size = readIdList(id_list);
 
+    /* If no arguments recieved */
     if (list_size == 0) {
         /*SORT*/
         for (i = 0; i < task_counter; i++) {
             printf("%d %s #%d %s\n", tasks[i].id, tasks[i].activity, tasks[i].duration, tasks[i].description);
         }
     }
+    /* If at least 1 ID recieved */
     else {
         for (i = 0; i < task_counter; i++) {
             for (j = 0; j < list_size; j++) {
@@ -158,9 +207,11 @@ void caseL() {
 }
 
 void caseN() {
+    /* Main func. of the command 'n' */
     int add_time, verifier = 0;
     char c;
 
+    /* Recieve the time and check if it is valid */
     verifier = scanf("%d", &add_time);
     while ((c = getchar()) != EOF && c != '\n');
     if (verifier != 1 || add_time < 0) {
@@ -175,14 +226,18 @@ void caseN() {
 }
 
 void caseU() {
+    /* Main func. of the command 'u' */
     User new_user;
     char c;
     int i = 0, state = 0;
 
+    /* Reads the new user */
     while ((c = getchar()) != '\n') {
         state = scanf("%20s[^ \n]", new_user.name);
     }
 
+    /* if state = 0: no users (input) found
+       if state = 1: user (input) found */
     if (state == 0) {
         for (i = 0; i < user_counter; i++) {
             printf("%s\n", users[i].name);
@@ -209,12 +264,15 @@ void caseU() {
 }
 
 void caseM() {
-    int id, i, gasto, slack;
+    /* Main func. of the command 'm' */
+    int id, i, waste, slack;
     char user[MAXUSERLEN], next_activity[MAXACTLEN], c;
 
+    /* Reads the input */
     scanf("%d %20s %20[^\n]", &id, user, next_activity);
     while ((c = getchar()) != EOF && c != '\n');
 
+    /* Error testing */
     if (!verifyID(id)) {
         printf("no such task\n");
         return;
@@ -232,15 +290,17 @@ void caseM() {
         return;
     }
     else {
+        /* if current activity is "TO DO": the task start instant is that time instant
+           if the activity we want to move is "DONE": calculate the waste and slack and print it */
         for (i = 0; i < task_counter; i++) {
             if (id == tasks[i].id) {
                 if (strcmp(tasks[i].activity, "TO DO") == 0) {
                     tasks[i].start_inst = time;
                 }
                 if (strcmp(next_activity, "DONE") == 0) {
-                    gasto = time - tasks[i].start_inst;
-                    slack = gasto - tasks[i].duration;
-                    printf("duration=%d slack=%d\n", gasto, slack);
+                    waste = time - tasks[i].start_inst;
+                    slack = waste - tasks[i].duration;
+                    printf("duration=%d slack=%d\n", waste, slack);
                     return;
                 }
                 strcpy(tasks[i].activity, next_activity);
@@ -251,25 +311,38 @@ void caseM() {
 }
 
 void caseD() {
+    /* Main func. of the command 'd' */
     char activity[MAXACTLEN], c;
-    int i;
+    int i, sort_list_counter = 0;
+    Task sort_list[MAXTASKS];
 
+    /* Reads the input */
     while ((c = getchar()) != EOF && c != '\n') {
         scanf("%20[^\n]", activity);
     }
 
-    for (i = 0; i < act_counter; i++) {
-        if (strcmp(activity, act[i].name) == 0) {
-            /* SORT */
-            return;
-        }
+    /* Error testing */
+    if (!verifyAct) {
+        printf("no such activity\n");
+        return;
     }
+    else {
+        /* VERIFICAR QUAIS AS TAREFAS ESTAO NA ACT PEDIDA -> LISTA DE IDS / LISTA DE TASKS*/
+        for (i = 0; i < task_counter; i++) {
+            if (strcmp(activity, tasks[i].activity) == 0) {
+                sort_list[sort_list_counter] = tasks[i];
+                sort_list_counter++;
+            }
+        }
+        /* SORT ORDEM NUMERICA DE INSTANTES INICIAIS */
+        sortStartInst(sort_list, sort_list_counter);
+        /* SE DUAS ACTS TIVEREM INSTANTES INICIAIS IGUAIS, SORT POR ORDEM ALFABETICA DE DESC */
 
-    printf("no such activity\n");
-    return;
+    }
 }
 
 void caseA() {
+    /* Main func. of the command 'a' */
     Activity new_a;
     int i, state = 0;
     char c;
