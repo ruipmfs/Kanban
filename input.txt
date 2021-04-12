@@ -1,25 +1,18 @@
-a DEBUG
-u user
-t 1 proj
-n 3
-m 1 user IN PROGRESS
-n 2
-l
-m 1 user DEBUG
-n 3
-d DEBUG
-m 1 user DONE
-d DEBUG
-l
-m 1 user IN PROGRESS
-n 3
-m 1 user DEBUG
-l
-d DEBUG
-n 2
-m 1 user DONE
-d DONE
+t 12 análise de requisitos
+t 8 desenho
+t 34 realização
+t 24 teste
+t 17 instalação
+u pedro
+n 1
+m 1 pedro IN PROGRESS
+n 1
+m 2 pedro IN PROGRESS
+n 1
+m 3 pedro IN PROGRESS
+n 1
+m 4 pedro IN PROGRESS
+n 1
+m 5 pedro IN PROGRESS
 l
 q
-
-

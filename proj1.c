@@ -122,6 +122,24 @@ Task sortedTasks(Task to_sort_list[], int sorted_startinst[], int sort_list_coun
     return sorted;
 }*/
 
+int alphabet(char s1[], char s2[]) {
+    int i;
+
+    for (i = 0; s1[i] != '\0' && s2[i] != '\0'; i++) {
+        if (s1[i] > s2[i]) {
+            return 0;
+        }
+    }
+    return 1;
+}
+
+int lessInstanceAndAlphabet(Task t1, Task t2) {
+    if (t1.start_inst == t2.start_inst) {
+        return alphabet(t1.description, t2.description);
+    }
+    return t1.start_inst <= t2.start_inst;
+}
+
 int partitionByInstance(Task list[], int start, int end) {
     /* AUX Func. of the quicksort algorithm.
        Defines a pivot and sort the list given in the input by putting
@@ -131,10 +149,9 @@ int partitionByInstance(Task list[], int start, int end) {
     Task pivot = list[end], temp;
 
     while (i < j) {
-        while (list[i].start_inst <= pivot.start_inst && i < j)
-            i++;
-        while (list[j].start_inst > pivot.start_inst && j > i)
-            j--;
+        while (lessInstanceAndAlphabet(list[++i], pivot));
+        while (!lessInstanceAndAlphabet(list[--j], pivot))
+            if (j == start) break;
         
         if (i < j) {
             temp = list[i];
@@ -161,20 +178,18 @@ void sortByInstance(Task list[], int left, int right) {
     }
 }
 
-
 int partitionByAlphabet(Task list[], int start, int end) {
     /* AUX Func. of the quicksort algorithm.
        Defines a pivot and sort the list given in the input by putting
        the minor numbers (num < pivot) on the left side of the pivot
        and the major numbers (num < pivot) on the right side of the pivot */
-    int i = start, j = end-1;
+    int i = start-1, j = end;
     Task pivot = list[end], temp;
 
     while (i < j) {
-        while (list[i].description[0] <= pivot.description[0] && i < j)
-            i++;
-        while (list[j].description[0] > pivot.description[0] && j > i)
-            j--;
+        while (alphabet(list[++i].description, pivot.description));
+        while (alphabet(pivot.description, list[--j].description))
+            if (j == start) break;
         
         if (i < j) {
             temp = list[i];
@@ -246,15 +261,20 @@ void caseT() {
 void caseL() {
     /* Main func. of the command 'l' */
     int list_size, i, j, id_list[MAXTASKS];
+    Task t[MAXTASKS];
+
+    for (i = 0; i < task_counter; i++) {
+        t[i] = tasks[i];
+    }
 
     /* Reads the ID's of the input and returns the size of the array */
     list_size = readIdList(id_list);
 
     /* If no arguments recieved */
     if (list_size == 0) {
-        /*SORT*/
+        sortByAlphabet(t, 0, task_counter-1);
         for (i = 0; i < task_counter; i++) {
-            printf("%d %s #%d %s\n", tasks[i].id, tasks[i].activity, tasks[i].duration, tasks[i].description);
+            printf("%d %s #%d %s\n", t[i].id, t[i].activity, t[i].duration, t[i].description);
         }
     }
     /* If at least 1 ID recieved */
@@ -398,11 +418,11 @@ void caseD() {
             }
         }
         /* SORT ORDEM NUMERICA DE INSTANTES INICIAIS */
-        sortByInstance(sort_list, 0, sort_list_counter);
+        sortByInstance(sort_list, 0, sort_list_counter-1);
         /* SE DUAS ACTS TIVEREM INSTANTES INICIAIS IGUAIS, SORT POR ORDEM ALFABETICA DE DESC */
 
         for (i = 0; i < sort_list_counter; i++) {
-            printf("%d %d %s", sort_list[i].id, sort_list[i].start_inst, sort_list[i].description);
+            printf("%d %d %s\n", sort_list[i].id, sort_list[i].start_inst, sort_list[i].description);
         }
     }
 }
