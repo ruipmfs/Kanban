@@ -12,7 +12,7 @@
 
 typedef struct {
     int id, duration, start_inst;
-    char description[MAXDESCLEN], user, activity[MAXACTLEN];
+    char description[MAXDESCLEN], user[MAXUSERLEN], activity[MAXACTLEN];
 } Task;
 
 typedef struct {
@@ -123,11 +123,15 @@ Task sortedTasks(Task to_sort_list[], int sorted_startinst[], int sort_list_coun
 }*/
 
 int alphabet(char s1[], char s2[]) {
+    /* RETURNS TRUE IF 1ST STRING COMES 1ST IN ALPHABETHIC ORDER, FALSE */
     int i;
 
     for (i = 0; s1[i] != '\0' && s2[i] != '\0'; i++) {
         if (s1[i] > s2[i]) {
             return 0;
+        }
+        else if (s1[i] < s2[i]) {
+            return 1;
         }
     }
     return 1;
@@ -187,9 +191,12 @@ int partitionByAlphabet(Task list[], int start, int end) {
     Task pivot = list[end], temp;
 
     while (i < j) {
-        while (alphabet(list[++i].description, pivot.description));
-        while (alphabet(pivot.description, list[--j].description))
+        while (alphabet(list[i].description, pivot.description))
+            ++i;
+        while (alphabet(pivot.description, list[j].description)) {
+            --j;
             if (j == start) break;
+        }
         
         if (i < j) {
             temp = list[i];

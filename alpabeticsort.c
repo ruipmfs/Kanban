@@ -3,26 +3,28 @@
 
 #define MAXDESCLEN 51
 
-int alphabet(char s1[MAXDESCLEN], char s2[MAXDESCLEN]) {
-    int i, state = 1;
+int alphabet(char s1[], char s2[]) {
+    int i;
 
-    for (i = 0; i < MAXDESCLEN; i++) {
+    for (i = 0; s1[i] != '\0' && s2[i] != '\0'; i++) {
         if (s1[i] > s2[i]) {
-            state = 0;
+            return 0;
+        }
+        else if (s1[i] < s2[i]) {
+            return 1;
         }
     }
-    return state;
+    return 1;
 }
 
 int main() {
-    char s1[MAXDESCLEN] = "AAAAR";
-    char s2[MAXDESCLEN] = "AAAAC";
-
+    char s1[MAXDESCLEN] = "rui";
+    char s2[MAXDESCLEN] = "sofia";
 
     int state;
     state = alphabet(s1, s2);
 
-    printf("s1 vem primeiro alfabeticamente que s2: %d", state);
+    printf("%s vem primeiro alfabeticamente que %s: %d", s1, s2, state);
     
     return 0;
 } 
