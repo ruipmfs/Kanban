@@ -170,16 +170,12 @@ int partitionByAlphabet(Task list[], int start, int end) {
        and the major numbers (num < pivot) on the right side of the pivot */
     int i = start-1, j = end;
     Task pivot = list[end], temp;
-    /*printf("i: %d\nj: %d", i, j);*/
 
     while (i < j) {
-        /*printf("I i: %d j: %d\n", i, j);*/
         while (alphabet(list[++i].description, pivot.description) && i < j && i < end);
-        /*printf("J i: %d j: %d\n", i, j);*/
         while (alphabet(pivot.description, list[--j].description)) {
             if (j == start) break;
         }
-        /*printf("DEPOIS i: %d j: %d\n", i, j);*/
 
         if (i < j) {
             temp = list[i];
@@ -271,10 +267,9 @@ void caseL() {
     }
     /* If at least 1 ID recieved */
     else {
-        for (i = 0; i < task_counter; i++) {
+        for (i = 0; i < list_size; i++) {
             if (id_list[i] > task_counter) {
                 printf("%d: no such task\n", id_list[i]);
-                return;
             }
         }
         for (i = 0; i < task_counter; i++) {
@@ -359,8 +354,14 @@ void caseM() {
         return;
     }
     else if (strcmp(next_activity, "TO DO") == 0) {
-        printf("task already started\n");
-        return;
+        for (i = 0; i < task_counter; i++) {
+            if (tasks[i].id == id) {
+                if (strcmp(tasks[i].activity, "TO DO") != 0) {
+                    printf("task already started\n");
+                    return;
+                }
+            }
+        }
     }
     else if (!verifyUser(user)) {
         printf("no such user\n");

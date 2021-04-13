@@ -56,6 +56,9 @@ int readIdList(int id_list[]) {
             id = id * 10 + (c - '0');
             empty_list = 0;
         }
+        else if (c == '-' && !in_id) {
+            id = -1;
+        }
     }
     if (!empty_list && in_id) {
         id_list[list_size] = id;
