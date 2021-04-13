@@ -99,29 +99,6 @@ int verifyAct(char activity[]) {
     return valid_act;
 }
 
-/*int extractStartInst(Task to_sort_list[], int sort_list_counter) {
-    int i, to_sort_startinst[MAXTASKS];
-
-    for (i = 0; i < sort_list_counter; i++) {
-        to_sort_startinst[i] = to_sort_list[i].start_inst;
-    }
-    return to_sort_startinst;
-}
-
-Task sortedTasks(Task to_sort_list[], int sorted_startinst[], int sort_list_counter) {
-    Task sorted[MAXTASKS];
-    int i, j, counter = 0;
-
-    for (i = 0; i < sort_list_counter; i++) {
-        for (j = 0; j < sort_list_counter; j++) {
-            if (to_sort_list[i].start_inst == sorted_startinst[j]) {
-                sorted[counter] = to_sort_list[i];
-            }
-        }
-    }
-    return sorted;
-}*/
-
 int alphabet(char s1[], char s2[]) {
     /* RETURNS TRUE IF 1ST STRING COMES 1ST IN ALPHABETHIC ORDER, FALSE */
     int i;
@@ -149,13 +126,16 @@ int partitionByInstance(Task list[], int start, int end) {
        Defines a pivot and sort the list given in the input by putting
        the minor numbers (num < pivot) on the left side of the pivot
        and the major numbers (num < pivot) on the right side of the pivot */
-    int i = start, j = end-1;
+    int i = start-1, j = end;
     Task pivot = list[end], temp;
 
     while (i < j) {
-        while (lessInstanceAndAlphabet(list[++i], pivot));
-        while (!lessInstanceAndAlphabet(list[--j], pivot))
+        while (lessInstanceAndAlphabet(list[i], pivot) && i < end)
+            ++i;
+        while (lessInstanceAndAlphabet(pivot, list[j])) {
+            --j;
             if (j == start) break;
+        }
         
         if (i < j) {
             temp = list[i];
@@ -174,6 +154,7 @@ void sortByInstance(Task list[], int left, int right) {
        Divides the array and call itself by recursion with the
        splitted array */
     int part;
+
     if (right > left) {
         part = partitionByInstance(list, left, right);
 
@@ -191,7 +172,7 @@ int partitionByAlphabet(Task list[], int start, int end) {
     Task pivot = list[end], temp;
 
     while (i < j) {
-        while (alphabet(list[i].description, pivot.description))
+        while (alphabet(list[i].description, pivot.description) && i < end)
             ++i;
         while (alphabet(pivot.description, list[j].description)) {
             --j;
@@ -391,7 +372,6 @@ void caseM() {
                     waste = time - tasks[i].start_inst;
                     slack = waste - tasks[i].duration;
                     printf("duration=%d slack=%d\n", waste, slack);
-                    return;
                 }
                 strcpy(tasks[i].activity, next_activity);
                 return;
@@ -425,8 +405,8 @@ void caseD() {
             }
         }
         /* SORT ORDEM NUMERICA DE INSTANTES INICIAIS */
+
         sortByInstance(sort_list, 0, sort_list_counter-1);
-        /* SE DUAS ACTS TIVEREM INSTANTES INICIAIS IGUAIS, SORT POR ORDEM ALFABETICA DE DESC */
 
         for (i = 0; i < sort_list_counter; i++) {
             printf("%d %d %s\n", sort_list[i].id, sort_list[i].start_inst, sort_list[i].description);
