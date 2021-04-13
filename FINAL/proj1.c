@@ -102,7 +102,7 @@ int verifyAct(char activity[]) {
 int alphabet(char s1[], char s2[]) {
     /* RETURNS TRUE IF 1ST STRING COMES 1ST IN ALPHABETHIC ORDER, FALSE */
     int i;
-
+    /*printf("s1: %s\ns2: %s\n", s1, s2);*/
     for (i = 0; s1[i] != '\0' && s2[i] != '\0'; i++) {
         if (s1[i] > s2[i]) {
             return 0;
@@ -128,12 +128,11 @@ int partitionByInstance(Task list[], int start, int end) {
        and the major numbers (num < pivot) on the right side of the pivot */
     int i = start-1, j = end;
     Task pivot = list[end], temp;
+    /*printf("i: %d\nj: %d", i, j);*/
 
     while (i < j) {
-        while (lessInstanceAndAlphabet(list[i], pivot) && i < end)
-            ++i;
-        while (lessInstanceAndAlphabet(pivot, list[j])) {
-            --j;
+        while (lessInstanceAndAlphabet(list[++i], pivot) && i < j && i < end);
+        while (lessInstanceAndAlphabet(pivot, list[--j])) {
             if (j == start) break;
         }
         
@@ -155,12 +154,13 @@ void sortByInstance(Task list[], int left, int right) {
        splitted array */
     int part;
 
-    if (right > left) {
-        part = partitionByInstance(list, left, right);
+    if (right <= left)
+        return;
+    
+    part = partitionByInstance(list, left, right);
 
-        sortByInstance(list, left, part-1);
-        sortByInstance(list, part+1, right);
-    }
+    sortByInstance(list, left, part-1);
+    sortByInstance(list, part+1, right);
 }
 
 int partitionByAlphabet(Task list[], int start, int end) {
@@ -170,15 +170,17 @@ int partitionByAlphabet(Task list[], int start, int end) {
        and the major numbers (num < pivot) on the right side of the pivot */
     int i = start-1, j = end;
     Task pivot = list[end], temp;
+    /*printf("i: %d\nj: %d", i, j);*/
 
     while (i < j) {
-        while (alphabet(list[i].description, pivot.description) && i < end)
-            ++i;
-        while (alphabet(pivot.description, list[j].description)) {
-            --j;
+        /*printf("I i: %d j: %d\n", i, j);*/
+        while (alphabet(list[++i].description, pivot.description) && i < j && i < end);
+        /*printf("J i: %d j: %d\n", i, j);*/
+        while (alphabet(pivot.description, list[--j].description)) {
             if (j == start) break;
         }
-        
+        /*printf("DEPOIS i: %d j: %d\n", i, j);*/
+
         if (i < j) {
             temp = list[i];
             list[i] = list[j];
@@ -196,12 +198,14 @@ void sortByAlphabet(Task list[], int left, int right) {
        Divides the array and call itself by recursion with the
        splitted array */
     int part;
-    if (right > left) {
-        part = partitionByAlphabet(list, left, right);
 
-        sortByAlphabet(list, left, part-1);
-        sortByAlphabet(list, part+1, right);
-    }
+    if (right <= left)
+        return;
+
+    part = partitionByAlphabet(list, left, right);
+
+    sortByAlphabet(list, left, part-1);
+    sortByAlphabet(list, part+1, right);
 }
 
 /*############################## CASE FUNCTIONS ##############################*/
@@ -310,7 +314,7 @@ void caseU() {
 
     /* Reads the new user */
     while ((c = getchar()) != '\n') {
-        state = scanf("%20s[^ \n]", new_user.name);
+        state = scanf("%20s[^\n]", new_user.name);
     }
 
     /* if state = 0: no users (input) found

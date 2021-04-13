@@ -310,7 +310,7 @@ void caseU() {
 
     /* Reads the new user */
     while ((c = getchar()) != '\n') {
-        state = scanf("%20s[^ \n]", new_user.name);
+        state = scanf("%20s[^\n]", new_user.name);
     }
 
     /* if state = 0: no users (input) found
