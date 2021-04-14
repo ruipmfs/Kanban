@@ -33,15 +33,26 @@ int time = 0, task_counter = 0, act_counter = 3, user_counter = 0;
 
 /*############################## AUX FUNCTIONS ##############################*/
 
+void setDefaultActs() {
+    strcpy(act[0].name, "TO DO");
+    strcpy(act[1].name, "IN PROGRESS");
+    strcpy(act[2].name, "DONE");
+}
+
 int readIdList(int id_list[]) {
     char c;
-    int id = 0, list_size = 0, in_id = 0, empty_list = 1;
+    int id = 0, list_size = 0, in_id = 0, empty_list = 1, negative_num = 0;
 
     /* Reads the array char by char */
     while ((c = getchar()) != EOF && c != '\n') {
         if (in_id) {
             if (c == ' ' || c == '\t') {
-                id_list[list_size] = id;
+                if (negative_num) {
+                    id_list[list_size] = -id;
+                    negative_num = 0;
+                }
+                else
+                    id_list[list_size] = id;
                 list_size++;
                 id = 0;
                 in_id = 0;
@@ -51,6 +62,10 @@ int readIdList(int id_list[]) {
                 empty_list = 0;
             }
         }
+        else if (c == '-' && !in_id) {
+            negative_num = 1;
+            in_id = 1;
+        }
         else if (c != ' ' && c != '\t') {
             in_id = 1;
             id = id * 10 + (c - '0');
@@ -58,7 +73,7 @@ int readIdList(int id_list[]) {
         }
     }
     if (!empty_list && in_id) {
-        id_list[list_size] = id;
+        id_list[list_size] = negative_num ? -id : id;
         list_size++;
     }
     return list_size;
@@ -67,36 +82,36 @@ int readIdList(int id_list[]) {
 int verifyID(int id) {
     /* Verifies if the input (ID) is contained in the Tasks
        (check if the task is valid) */
-    int i, valid_id = 0;
+    int i;
 
     for (i = 0; i < task_counter; i++) {
         if (id == tasks[i].id) {
-            valid_id = 1;
+            return 1;
         }
     }
-    return valid_id;
+    return 0;
 }
 
 int verifyUser(char user[]) {
     /* Verifies if the input (User) is contained in the listed Users */
-    int i, valid_user = 0;
+    int i;
     for (i = 0; i < user_counter; i++) {
         if (strcmp(user, users[i].name) == 0) {
-            valid_user = 1;
+            return 1;
         }
     }
-    return valid_user;
+    return 0;
 }
 
 int verifyAct(char activity[]) {
     /* Verifies if the input (Activity) is contained in the listed Activities */
-    int i, valid_act = 0;
+    int i;
     for (i = 0; i < act_counter; i++) {
         if (strcmp(activity, act[i].name) == 0) {
-            valid_act = 1;
+            return 1;
         }
     }
-    return valid_act;
+    return 0;
 }
 
 int alphabet(char s1[], char s2[]) {
@@ -210,11 +225,10 @@ void caseT() {
     /* Main func. of the command 't' */
     int duration, i;
     char description[MAXDESCLEN], c;
-    Task t;
     
     scanf("%d %50[^\n]", &duration, description);
 
-    while ((c = getchar()) != EOF && c != '\n'); /* Read the remaining char(s) in the line */
+    while ((c = getchar()) != '\n'); /* Read the remaining char(s) in the line */
 
     /* Error testing */
     if (task_counter >= MAXTASKS) {
@@ -222,7 +236,7 @@ void caseT() {
         return;
     }
     
-    for (i = 0; i <= task_counter; i++) {
+    for (i = 0; i < task_counter; i++) {
         if (strcmp(description, tasks[i].description) == 0) {
             printf("duplicate description\n");
             return;
@@ -234,16 +248,15 @@ void caseT() {
         return;
     }
 
-    t.duration = duration;
-    t.id = task_counter + 1;
-    t.start_inst = 0;
-    strcpy(t.description, description);
-    strcpy(t.activity, "TO DO");
+    tasks[task_counter].duration = duration;
+    tasks[task_counter].id = task_counter + 1;
+    tasks[task_counter].start_inst = 0;
+    strcpy(tasks[task_counter].description, description);
+    strcpy(tasks[task_counter].activity, "TO DO");
 
-    tasks[task_counter] = t;
     task_counter++;
 
-    printf("task %d\n", t.id);
+    printf("task %d\n", tasks[task_counter-1].id);
 }
 
 void caseL() {
@@ -268,14 +281,12 @@ void caseL() {
     /* If at least 1 ID recieved */
     else {
         for (i = 0; i < list_size; i++) {
-            if (id_list[i] > task_counter) {
-                printf("%d: no such task\n", id_list[i]);
-            }
-        }
-        for (i = 0; i < task_counter; i++) {
-            for (j = 0; j < list_size; j++) {
-                if (tasks[i].id == id_list[j]) {
-                    printf("%d %s #%d %s\n", tasks[i].id, tasks[i].activity, tasks[i].duration, tasks[i].description);
+            if (id_list[i] > task_counter || id_list[i] <= 0) {
+                    printf("%d: no such task\n", id_list[i]);
+                }
+            for (j = 0; j < task_counter; j++) {
+                if (id_list[i] == tasks[j].id) {
+                    printf("%d %s #%d %s\n", tasks[j].id, tasks[j].activity, tasks[j].duration, tasks[j].description);
                 }
             }
         }
@@ -284,20 +295,19 @@ void caseL() {
 
 void caseN() {
     /* Main func. of the command 'n' */
-    int add_time, verifier = 0;
+    int add_time, status = 0;
     char c;
 
     /* Recieve the time and check if it is valid */
-    verifier = scanf("%d", &add_time);
+    status = scanf("%d", &add_time);
     while ((c = getchar()) != EOF && c != '\n');
-    if (verifier != 1 || add_time < 0) {
+
+    if (status != 1 || add_time < 0) {
         printf("invalid time\n");
-        return;
     }
     else {
-        printf("%d\n", (time + add_time));
         time += add_time;
-        return;
+        printf("%d\n", time);
     }
 }
 
@@ -309,7 +319,7 @@ void caseU() {
 
     /* Reads the new user */
     while ((c = getchar()) != '\n') {
-        state = scanf("%20s[^\n]", new_user.name);
+        state = scanf("%20s[^ \n]", new_user.name);
     }
 
     /* if state = 0: no users (input) found
@@ -318,24 +328,20 @@ void caseU() {
         for (i = 0; i < user_counter; i++) {
             printf("%s\n", users[i].name);
         }
-        return;
     }
     else {
-        if (user_counter >= MAXUSERS) {
-            printf("too many users\n");
-            return;
-        }
-
         for (i = 0; i <= user_counter; i++) {
             if (strcmp(new_user.name, users[i].name) == 0) {
                 printf("user already exists\n");
                 return;
             }
         }
-        
+        if (user_counter >= MAXUSERS) {
+            printf("too many users\n");
+            return;
+        }
         strcpy(users[user_counter].name, new_user.name);
         user_counter++;
-        return;
     }
 }
 
@@ -351,7 +357,6 @@ void caseM() {
     /* Error testing */
     if (!verifyID(id)) {
         printf("no such task\n");
-        return;
     }
     else if (strcmp(next_activity, "TO DO") == 0) {
         for (i = 0; i < task_counter; i++) {
@@ -365,11 +370,9 @@ void caseM() {
     }
     else if (!verifyUser(user)) {
         printf("no such user\n");
-        return;
     }
     else if (!verifyAct(next_activity)) {
         printf("no such activity\n");
-        return;
     }
     else {
         /* if current activity is "TO DO": the task start instant is that time instant
@@ -379,13 +382,12 @@ void caseM() {
                 if (strcmp(tasks[i].activity, "TO DO") == 0) {
                     tasks[i].start_inst = time;
                 }
-                if (strcmp(next_activity, "DONE") == 0) {
+                if (strcmp(next_activity, "DONE") == 0 && strcmp(tasks[i].activity, "DONE") != 0) {
                     waste = time - tasks[i].start_inst;
                     slack = waste - tasks[i].duration;
                     printf("duration=%d slack=%d\n", waste, slack);
                 }
                 strcpy(tasks[i].activity, next_activity);
-                return;
             }
         }
     }
@@ -405,7 +407,6 @@ void caseD() {
     /* Error testing */
     if (!verifyAct(activity)) {
         printf("no such activity\n");
-        return;
     }
     else {
         /* VERIFICAR QUAIS AS TAREFAS ESTAO NA ACT PEDIDA -> LISTA DE IDS / LISTA DE TASKS*/
@@ -431,7 +432,7 @@ void caseA() {
     int i, state = 0;
     char c;
 
-    while ((c = getchar()) != EOF && c != '\n') {
+    while ((c = getchar()) && c != '\n') {
         state = scanf("%20[^\n]", new_a.name);
     }
 
@@ -439,7 +440,6 @@ void caseA() {
         for (i = 0; i < act_counter; i++) {
             printf("%s\n", act[i].name);
         }
-        return;
     }
 
     else {
@@ -464,7 +464,6 @@ void caseA() {
 
         strcpy(act[act_counter].name, new_a.name);
         act_counter++;
-        return;
     }
 }
 
@@ -473,40 +472,37 @@ void caseA() {
 int main() {
     char c;
     int exit = 0;
-
-    strcpy(act[0].name, "TO DO");
-    strcpy(act[1].name, "IN PROGRESS");
-    strcpy(act[2].name, "DONE");
     
+    setDefaultActs();
+
     while (!exit) {
-        c = getchar();
-        switch (c) {
-                case 't':
-                    caseT();
-                    break;
-                case 'l':
-                    caseL();
-                    break;
-                case 'n':
-                    caseN();
-                    break;
-                case 'u':
-                    caseU();
-                    break;
-                case 'm':
-                    caseM();
-                    break;
-                case 'd':
-                    caseD();
-                    break;
-                case 'a':
-                    caseA();
-                    break;
-                case 'q':
-                    exit = 1;
-                    break;
-                default:
-                    exit = 1;
+        switch (c = getchar()) {
+            case 't':
+                caseT();
+                break;
+            case 'l':
+                caseL();
+                break;
+            case 'n':
+                caseN();
+                break;
+            case 'u':
+                caseU();
+                break;
+            case 'm':
+                caseM();
+                break;
+            case 'd':
+                caseD();
+                break;
+            case 'a':
+                caseA();
+                break;
+            case 'q':
+                exit = 1;
+                break;
+            default:
+                exit = 1;
         }
     }
     return 0;
