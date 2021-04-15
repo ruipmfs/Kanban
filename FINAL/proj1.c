@@ -44,6 +44,7 @@ int time = 0, task_counter = 0, act_counter = 3, user_counter = 0;
 void setDefaultActs() {
     /*
     CREATES THE DEFAULT ACTIVITIES
+
     INPUT: - 
     OUTPUT: - 
     */
@@ -56,6 +57,7 @@ void setDefaultActs() {
 int readIdList(int id_list[]) {
     /*
     READS A SEQUENCE OF ID'S, CHANGING AN EMPTY LIST WITH THEM
+
     INPUT:  [int] id_list[]: LIST OF ID'S (EMPTY)
     OUTPUT: [int] list_size: SIZE OF THE LIST
             [int] id_list[]: LIST OF ID'S
@@ -103,6 +105,7 @@ int readIdList(int id_list[]) {
 int verifyID(int id) {
     /*
     VERIFIES IF THE INPUT (ID) IS CONTAINED IN THE TASKS
+
     INPUT:  [int] id: AN INTEGER NUMBER (ID)
     OUTPUT: bool (IF THE ID IS VALID OR NOT)
     */
@@ -119,6 +122,7 @@ int verifyID(int id) {
 int verifyUser(char user[]) {
     /*
     VERIFIES IF THE INPUT (USER) IS CONTAINED IN THE LISTED USERS
+
     INPUT:  [char] user: A STRING WITHOUT SPACES AND LESS THAN 21 CHARS (USER)
     OUTPUT: bool (IF THE USER IS VALID OR NOT)
     */
@@ -134,6 +138,7 @@ int verifyUser(char user[]) {
 int verifyAct(char activity[]) {
     /*
     VERIFIES IF THE INPUT (ACTIVITY) IS CONTAINED IN THE LISTED ACTIVITIES
+
     INPUT:  [char] activity[]: A STRING WITH LESS THAN 21 CHARS (ACTIVITY)
     OUTPUT: bool (IF THE ACTIVITY IS VALID OR NOT)
     */
@@ -149,6 +154,7 @@ int verifyAct(char activity[]) {
 int lessAlphabet(char s1[], char s2[]) {
     /*
     VERIFIES WHICH BETWEEN 2 STRINGS COMES 1ST ALPHABETICALLY
+
     INPUT:  [char] s1[]: STRING
             [char] s2[]: STRING
     OUTPUT: bool (AS DESCRIBED)
@@ -169,7 +175,8 @@ int lessInstanceAndAlphabet(Task t1, Task t2) {
     /*
     CHECKS IF 2 TASKS HAVE THE SAME START INSTANT. IF SO CHECK WHICH COMES 1ST
     ALPHABETICALLY (CALL FUNCTION lessAlphabet()), OTHERWISE CHECK IF THE START
-    INSTANT OF T1 IS LESS OR EQUAL FROM T2 
+    INSTANT OF T1 IS LESS OR EQUAL FROM T2
+
     INPUT:  [Task] t1: TASK
             [Task] t2: TASK
     OUTPUT: bool (AS DESCRIBED)
@@ -179,114 +186,20 @@ int lessInstanceAndAlphabet(Task t1, Task t2) {
     }
     return t1.start_inst <= t2.start_inst;
 }
-/*
-int partitionByInstance(Task list[], int start, int end) {
-    /*
-    AUX FUNC OF THE QUICKSORT ALGORITHM
-    SORTS SMALL PARTITIONS OF THE MAIN LIST
-    INPUT:  [Task] list[]: LIST OF TASKS. THE FUNC WILL USE ELEMENTS FROM THE
-                           STRUCT TASK IN AUX FUNCS
-            [int] start: START INDEX OF THE FUNC WE WANT TO SORT
-            [int] end: FINAL INDEX OF THE FUNC WE WANT TO SORT
-    OUTPUT: [int] i: INDEX OF WHERE THE LIST STARTS, TO BE USED ON MAIN
-                     FUNC OF QUICKSORT
-
-    int i = start-1, j = end;
-    Task pivot = list[end], temp;
-
-    while (i < j) {
-        while (lessInstanceAndAlphabet(list[++i], pivot) && i < j && i < end);
-        while (lessInstanceAndAlphabet(pivot, list[--j])) {
-            if (j == start) break;
-        }
-        
-        if (i < j) {
-            temp = list[i];
-            list[i] = list[j];
-            list[j] = temp;
-        }
-    }
-    temp = list[i];
-    list[i] = list[end];
-    list[end] = temp;
-    return i;
-}
-
-void sortByInstance(Task list[], int left, int right) {
-    /*
-    MAIN FUNC OF THE SORT ALGORITHM (RECUSIVE FUNC)
-    DIVIDES THE LIST BY TWO, CALL ITSELF TWICE AND partitionByInstance() TO SORT
-    INPUT:  [Task] list[]: LIST OF TASKS. THE FUNC WILL USE ELEMENTS FROM THE
-                           STRUCT TASK IN AUX FUNCS
-            [int] left: START INDEX OF THE FUNC WE WANT TO SORT
-            [int] right: FINAL INDEX OF THE FUNC WE WANT TO SORT
-    OUTPUT: [int] i: INDEX OF WHERE THE LIST STARTS, TO BE USED ON MAIN
-                     FUNC OF QUICKSORT
-    
-    int part;
-
-    if (right <= left)
-        return;
-    
-    part = partitionByInstance(list, left, right);
-
-    sortByInstance(list, left, part-1);
-    sortByInstance(list, part+1, right);
-}
-int partitionByAlphabet(Task list[], int start, int end) {
-    /*
-    AUX FUNC OF THE QUICKSORT ALGORITHM
-    SORTS SMALL PARTITIONS OF THE MAIN LIST
-    INPUT:  [Task] list[]: LIST OF TASKS. THE FUNC WILL USE ELEMENTS FROM THE
-                           STRUCT TASK IN AUX FUNCS
-            [int] start: START INDEX OF THE FUNC WE WANT TO SORT
-            [int] end: FINAL INDEX OF THE FUNC WE WANT TO SORT
-    OUTPUT: [int] i: INDEX OF WHERE THE LIST STARTS, TO BE USED ON MAIN
-                     FUNC OF QUICKSORT
-    int i = start-1, j = end;
-    Task pivot = list[end], temp;
-
-    while (i < j) {
-        while (lessAlphabet(list[++i].description, pivot.description) && i < j && i < end);
-        while (lessAlphabet(pivot.description, list[--j].description)) {
-            if (j == start) break;
-        }
-
-        if (i < j) {
-            temp = list[i];
-            list[i] = list[j];
-            list[j] = temp;
-        }
-    }
-    temp = list[i];
-    list[i] = list[end];
-    list[end] = temp;
-    return i;
-}
-
-void sortByAlphabet(Task list[], int left, int right) {
-    /*
-    MAIN FUNC OF THE SORT ALGORITHM (RECUSIVE FUNC)
-    DIVIDES THE LIST BY TWO, CALL ITSELF TWICE AND partitionByAlphabet() TO SORT
-    INPUT:  [Task] list[]: LIST OF TASKS. THE FUNC WILL USE ELEMENTS FROM THE
-                           STRUCT TASK IN AUX FUNCS
-            [int] left: START INDEX OF THE FUNC WE WANT TO SORT
-            [int] right: FINAL INDEX OF THE FUNC WE WANT TO SORT
-    OUTPUT: [int] i: INDEX OF WHERE THE LIST STARTS, TO BE USED ON MAIN
-                     FUNC OF QUICKSORT
-    int part;
-
-    if (right <= left)
-        return;
-
-    part = partitionByAlphabet(list, left, right);
-
-    sortByAlphabet(list, left, part-1);
-    sortByAlphabet(list, part+1, right);
-}
-*/
 
 int partition(Task list[], int left, int right, int less_instance) {
+    /*
+    AUX FUNC OF THE QUICKSORT ALGORITHM
+    SORTS SMALL PARTITIONS OF THE MAIN LIST
+    IF THE FLAG (less_instance) IS TRUE, SORTS BY INSTANCE, AND THEN BY ALPHABET (DESC)
+    ELSE ONLY SORTS BY ALPHABET (DESCRIPTION)
+
+    INPUT:  [Task] list[]: LIST OF TASKS
+            [int] left: START INDEX OF THE FUNC WE WANT TO SORT
+            [int] right: FINAL INDEX OF THE FUNC WE WANT TO SORT
+    OUTPUT: [int] i: INDEX OF WHERE THE LIST STARTS, TO BE USED ON MAIN
+                     FUNC OF QUICKSORT
+    */
     int i = left-1, j = right;
     Task pivot = list[right], temp;
 
@@ -315,6 +228,16 @@ int partition(Task list[], int left, int right, int less_instance) {
 }
 
 void quicksort(Task list[], int left, int right, int less_instance) {
+    /*
+    MAIN FUNC OF THE SORT ALGORITHM (RECUSIVE FUNC)
+    DIVIDES THE LIST BY TWO, CALL ITSELF TWICE AND partition() TO SORT
+
+    INPUT:  [Task] list[]: LIST OF TASKS
+            [int] left: START INDEX OF THE FUNC WE WANT TO SORT
+            [int] right: FINAL INDEX OF THE FUNC WE WANT TO SORT
+    OUTPUT: [int] i: INDEX OF WHERE THE LIST STARTS, TO BE USED ON MAIN
+                     FUNC OF QUICKSORT
+    */
     int part;
 
     if (right <= left)
@@ -332,12 +255,14 @@ void caseT() {
     /*
     MAIN FUNCTION OF THE COMMAND 't'
     CREATES A NEW TASK
+
     INPUT: -
     OUTPUT: -
     */
     int duration, i;
     char description[MAXDESCLEN], c;
     
+    /* Read input */
     scanf("%d %50[^\n]", &duration, description);
 
     while ((c = getchar()) != '\n'); /* Read the remaining char(s) in the line */
@@ -378,6 +303,7 @@ void caseL() {
     PRINTS A COUPLE OF TASKS, RECIEVED IN THE id_list[].
     IF NO ID'S RECIEVED, PRINTS ALL THE TASKS BY CREATION ORDER
     ALPHABETIC ORDER (DESCRIPTION)
+
     INPUT: -
     OUTPUT: -
     */
@@ -388,6 +314,7 @@ void caseL() {
         sorted_tasks[i] = tasks[i];
     }
 
+    /* Read input */
     list_size = readIdList(id_list);
 
     /* If no arguments recieved */
@@ -416,6 +343,7 @@ void caseN() {
     /*
     MAIN FUNCTION OF THE COMMAND 'n'
     ADVANCES IN TIME
+
     INPUT: -
     OUTPUT: -
     */
@@ -439,6 +367,7 @@ void caseU() {
     /*
     MAIN FUNCTION OF THE COMMAND 'u'
     CREATES A NEW USER
+
     INPUT: -
     OUTPUT: -
     */
@@ -478,13 +407,14 @@ void caseM() {
     /*
     MAIN FUNCTION OF THE COMMAND 'm'
     MOVE A TASK TO A DIFFERENT ACTIVITY
+
     INPUT: -
     OUTPUT: -
     */
     int id, i, waste, slack;
     char user[MAXUSERLEN], next_activity[MAXACTLEN], c;
 
-    /* Reads the input */
+    /* Read the input */
     scanf("%d %20s %20[^\n]", &id, user, next_activity);
     while ((c = getchar()) != EOF && c != '\n');
 
@@ -533,6 +463,7 @@ void caseD() {
     SORT ALL THE TASKS IN A CERTAIN ACTIVITY BY START INSTANT. IF THERE IS
     TASKS WITH THE SAME START INSTANT, IT SHOULD BE SORT BY ALPHABETIC ORDER
     OF THE DESCRIPTION
+
     INPUT: -
     OUTPUT: -
     */
@@ -540,7 +471,7 @@ void caseD() {
     int i, sort_list_counter = 0;
     Task sort_list[MAXTASKS];
 
-    /* Reads the input */
+    /* Read the input */
     while ((c = getchar()) != EOF && c != '\n') {
         scanf("%20[^\n]", activity);
     }
@@ -570,6 +501,7 @@ void caseA() {
     /*
     MAIN FUNCTION OF THE COMMAND 'a'
     CREATES A NEW ACTIVITY
+
     INPUT: -
     OUTPUT: -
     */
@@ -578,7 +510,7 @@ void caseA() {
     int i;
     new_a.name[0] = '\0';
 
-    /* Reads the input */
+    /* Read the input */
     while ((c = getchar()) && c != '\n') {
         scanf("%20[^\n]", new_a.name);
     }
@@ -620,7 +552,13 @@ void caseA() {
 /*############################## MAIN FUNCTION ##############################*/
 
 int main() {
-    /* FUNCTION THAT CONTROLS ALL THE PROJECT */
+    /*
+    FUNCTION THAT CONTROLS ALL THE PROJECT
+    CALLS EVERY FUNCTION READING ONLY THE 1ST CHAR OF A STRING
+    
+    INPUT: -
+    OUTPUT: -
+    */
     char c;
     int exit = 0;
     
@@ -653,7 +591,7 @@ int main() {
                 exit = 1;
                 break;
             default:
-                exit = 1;
+                exit = 1; /* Stops the program (same as 'q') */
         }
     }
     return 0;
