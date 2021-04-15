@@ -1,3 +1,4 @@
+/* RUI SANTOS   98966 */
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
@@ -25,21 +26,41 @@ typedef struct {
 
 /*############################## GLOBAL VARS ##############################*/
 
-Task tasks[MAXTASKS];
-Activity act[MAXACT];
-User users[MAXUSERS];
+Task tasks[MAXTASKS]; /* VECTOR OF ALL TASKS */
+Activity act[MAXACT]; /* VECTOR OF ALL ACTIVITIES */
+User users[MAXUSERS]; /* VECTOR OF ALL USERS */
 
 int time = 0, task_counter = 0, act_counter = 3, user_counter = 0;
+
+/*
+[int] time: system time
+[int] task_counter: current number of tasks
+[int] act_counter: current number of activities (3 because of the default acts)
+[int] user_counter: current number of users
+*/
 
 /*############################## AUX FUNCTIONS ##############################*/
 
 void setDefaultActs() {
+    /*
+    CREATES THE DEFAULT ACTIVITIES
+    INPUT: - 
+    OUTPUT: - 
+    */
+
     strcpy(act[0].name, "TO DO");
     strcpy(act[1].name, "IN PROGRESS");
     strcpy(act[2].name, "DONE");
 }
 
 int readIdList(int id_list[]) {
+    /*
+    READS A SEQUENCE OF ID'S, CHANGING AN EMPTY LIST WITH THEM
+    INPUT:  [int] id_list[]: LIST OF ID'S (EMPTY)
+    OUTPUT: [int] list_size: SIZE OF THE LIST
+            [int] id_list[]: LIST OF ID'S
+    */
+
     char c;
     int id = 0, list_size = 0, in_id = 0, empty_list = 1, negative_num = 0;
 
@@ -80,8 +101,11 @@ int readIdList(int id_list[]) {
 }
 
 int verifyID(int id) {
-    /* Verifies if the input (ID) is contained in the Tasks
-       (check if the task is valid) */
+    /*
+    VERIFIES IF THE INPUT (ID) IS CONTAINED IN THE TASKS
+    INPUT:  [int] id: AN INTEGER NUMBER (ID)
+    OUTPUT: bool (IF THE ID IS VALID OR NOT)
+    */
     int i;
 
     for (i = 0; i < task_counter; i++) {
@@ -93,10 +117,14 @@ int verifyID(int id) {
 }
 
 int verifyUser(char user[]) {
-    /* Verifies if the input (User) is contained in the listed Users */
+    /*
+    VERIFIES IF THE INPUT (USER) IS CONTAINED IN THE LISTED USERS
+    INPUT:  [char] user: A STRING WITHOUT SPACES AND LESS THAN 21 CHARS (USER)
+    OUTPUT: bool (IF THE USER IS VALID OR NOT)
+    */
     int i;
     for (i = 0; i < user_counter; i++) {
-        if (strcmp(user, users[i].name) == 0) {
+        if (!strcmp(user, users[i].name)) {
             return 1;
         }
     }
@@ -104,20 +132,28 @@ int verifyUser(char user[]) {
 }
 
 int verifyAct(char activity[]) {
-    /* Verifies if the input (Activity) is contained in the listed Activities */
+    /*
+    VERIFIES IF THE INPUT (ACTIVITY) IS CONTAINED IN THE LISTED ACTIVITIES
+    INPUT:  [char] activity[]: A STRING WITH LESS THAN 21 CHARS (ACTIVITY)
+    OUTPUT: bool (IF THE ACTIVITY IS VALID OR NOT)
+    */
     int i;
     for (i = 0; i < act_counter; i++) {
-        if (strcmp(activity, act[i].name) == 0) {
+        if (!strcmp(activity, act[i].name)) {
             return 1;
         }
     }
     return 0;
 }
 
-int alphabet(char s1[], char s2[]) {
-    /* RETURNS TRUE IF 1ST STRING COMES 1ST IN ALPHABETHIC ORDER, FALSE */
+int lessAlphabet(char s1[], char s2[]) {
+    /*
+    VERIFIES WHICH BETWEEN 2 STRINGS COMES 1ST ALPHABETICALLY
+    INPUT:  [char] s1[]: STRING
+            [char] s2[]: STRING
+    OUTPUT: bool (AS DESCRIBED)
+    */
     int i;
-    /*printf("s1: %s\ns2: %s\n", s1, s2);*/
     for (i = 0; s1[i] != '\0' && s2[i] != '\0'; i++) {
         if (s1[i] > s2[i]) {
             return 0;
@@ -130,20 +166,33 @@ int alphabet(char s1[], char s2[]) {
 }
 
 int lessInstanceAndAlphabet(Task t1, Task t2) {
+    /*
+    CHECKS IF 2 TASKS HAVE THE SAME START INSTANT. IF SO CHECK WHICH COMES 1ST
+    ALPHABETICALLY (CALL FUNCTION lessAlphabet()), OTHERWISE CHECK IF THE START
+    INSTANT OF T1 IS LESS OR EQUAL FROM T2 
+    INPUT:  [Task] t1: TASK
+            [Task] t2: TASK
+    OUTPUT: bool (AS DESCRIBED)
+    */
     if (t1.start_inst == t2.start_inst) {
-        return alphabet(t1.description, t2.description);
+        return lessAlphabet(t1.description, t2.description);
     }
     return t1.start_inst <= t2.start_inst;
 }
-
+/*
 int partitionByInstance(Task list[], int start, int end) {
-    /* AUX Func. of the quicksort algorithm.
-       Defines a pivot and sort the list given in the input by putting
-       the minor numbers (num < pivot) on the left side of the pivot
-       and the major numbers (num < pivot) on the right side of the pivot */
+    /*
+    AUX FUNC OF THE QUICKSORT ALGORITHM
+    SORTS SMALL PARTITIONS OF THE MAIN LIST
+    INPUT:  [Task] list[]: LIST OF TASKS. THE FUNC WILL USE ELEMENTS FROM THE
+                           STRUCT TASK IN AUX FUNCS
+            [int] start: START INDEX OF THE FUNC WE WANT TO SORT
+            [int] end: FINAL INDEX OF THE FUNC WE WANT TO SORT
+    OUTPUT: [int] i: INDEX OF WHERE THE LIST STARTS, TO BE USED ON MAIN
+                     FUNC OF QUICKSORT
+
     int i = start-1, j = end;
     Task pivot = list[end], temp;
-    /*printf("i: %d\nj: %d", i, j);*/
 
     while (i < j) {
         while (lessInstanceAndAlphabet(list[++i], pivot) && i < j && i < end);
@@ -164,9 +213,16 @@ int partitionByInstance(Task list[], int start, int end) {
 }
 
 void sortByInstance(Task list[], int left, int right) {
-    /* Main func. of the sprt algorithm.
-       Divides the array and call itself by recursion with the
-       splitted array */
+    /*
+    MAIN FUNC OF THE SORT ALGORITHM (RECUSIVE FUNC)
+    DIVIDES THE LIST BY TWO, CALL ITSELF TWICE AND partitionByInstance() TO SORT
+    INPUT:  [Task] list[]: LIST OF TASKS. THE FUNC WILL USE ELEMENTS FROM THE
+                           STRUCT TASK IN AUX FUNCS
+            [int] left: START INDEX OF THE FUNC WE WANT TO SORT
+            [int] right: FINAL INDEX OF THE FUNC WE WANT TO SORT
+    OUTPUT: [int] i: INDEX OF WHERE THE LIST STARTS, TO BE USED ON MAIN
+                     FUNC OF QUICKSORT
+    
     int part;
 
     if (right <= left)
@@ -177,18 +233,22 @@ void sortByInstance(Task list[], int left, int right) {
     sortByInstance(list, left, part-1);
     sortByInstance(list, part+1, right);
 }
-
 int partitionByAlphabet(Task list[], int start, int end) {
-    /* AUX Func. of the quicksort algorithm.
-       Defines a pivot and sort the list given in the input by putting
-       the minor numbers (num < pivot) on the left side of the pivot
-       and the major numbers (num < pivot) on the right side of the pivot */
+    /*
+    AUX FUNC OF THE QUICKSORT ALGORITHM
+    SORTS SMALL PARTITIONS OF THE MAIN LIST
+    INPUT:  [Task] list[]: LIST OF TASKS. THE FUNC WILL USE ELEMENTS FROM THE
+                           STRUCT TASK IN AUX FUNCS
+            [int] start: START INDEX OF THE FUNC WE WANT TO SORT
+            [int] end: FINAL INDEX OF THE FUNC WE WANT TO SORT
+    OUTPUT: [int] i: INDEX OF WHERE THE LIST STARTS, TO BE USED ON MAIN
+                     FUNC OF QUICKSORT
     int i = start-1, j = end;
     Task pivot = list[end], temp;
 
     while (i < j) {
-        while (alphabet(list[++i].description, pivot.description) && i < j && i < end);
-        while (alphabet(pivot.description, list[--j].description)) {
+        while (lessAlphabet(list[++i].description, pivot.description) && i < j && i < end);
+        while (lessAlphabet(pivot.description, list[--j].description)) {
             if (j == start) break;
         }
 
@@ -205,9 +265,15 @@ int partitionByAlphabet(Task list[], int start, int end) {
 }
 
 void sortByAlphabet(Task list[], int left, int right) {
-    /* Main func. of the sprt algorithm.
-       Divides the array and call itself by recursion with the
-       splitted array */
+    /*
+    MAIN FUNC OF THE SORT ALGORITHM (RECUSIVE FUNC)
+    DIVIDES THE LIST BY TWO, CALL ITSELF TWICE AND partitionByAlphabet() TO SORT
+    INPUT:  [Task] list[]: LIST OF TASKS. THE FUNC WILL USE ELEMENTS FROM THE
+                           STRUCT TASK IN AUX FUNCS
+            [int] left: START INDEX OF THE FUNC WE WANT TO SORT
+            [int] right: FINAL INDEX OF THE FUNC WE WANT TO SORT
+    OUTPUT: [int] i: INDEX OF WHERE THE LIST STARTS, TO BE USED ON MAIN
+                     FUNC OF QUICKSORT
     int part;
 
     if (right <= left)
@@ -218,11 +284,57 @@ void sortByAlphabet(Task list[], int left, int right) {
     sortByAlphabet(list, left, part-1);
     sortByAlphabet(list, part+1, right);
 }
+*/
+
+int partition(Task list[], int left, int right, int less_instance) {
+    int i = left-1, j = right;
+    Task pivot = list[right], temp;
+
+    while (i < j) {
+        if (less_instance) {
+            while (lessInstanceAndAlphabet(list[++i], pivot) && i < j && i < right);
+            while (lessInstanceAndAlphabet(pivot, list[--j])) 
+                if (j == left) break;  
+        }
+        else {
+            while (lessAlphabet(list[++i].description, pivot.description) && i < j && i < right);
+            while (lessAlphabet(pivot.description, list[--j].description)) 
+                if (j == left) break;  
+        }
+
+        if (i < j) {
+            temp = list[i];
+            list[i] = list[j];
+            list[j] = temp;
+        }
+    }
+    temp = list[i];
+    list[i] = list[right];
+    list[right] = temp;
+    return i;
+}
+
+void quicksort(Task list[], int left, int right, int less_instance) {
+    int part;
+
+    if (right <= left)
+        return;
+
+    part = partition(list, left, right, less_instance);
+
+    quicksort(list, left, part-1, less_instance);
+    quicksort(list, part+1, right, less_instance);
+}
 
 /*############################## CASE FUNCTIONS ##############################*/
 
 void caseT() {
-    /* Main func. of the command 't' */
+    /*
+    MAIN FUNCTION OF THE COMMAND 't'
+    CREATES A NEW TASK
+    INPUT: -
+    OUTPUT: -
+    */
     int duration, i;
     char description[MAXDESCLEN], c;
     
@@ -237,7 +349,7 @@ void caseT() {
     }
     
     for (i = 0; i < task_counter; i++) {
-        if (strcmp(description, tasks[i].description) == 0) {
+        if (!strcmp(description, tasks[i].description)) {
             printf("duplicate description\n");
             return;
         }
@@ -248,6 +360,7 @@ void caseT() {
         return;
     }
 
+    /* Task creation */
     tasks[task_counter].duration = duration;
     tasks[task_counter].id = task_counter + 1;
     tasks[task_counter].start_inst = 0;
@@ -260,22 +373,28 @@ void caseT() {
 }
 
 void caseL() {
-    /* Main func. of the command 'l' */
+    /*
+    MAIN FUNCTION OF THE COMMAND 'l'
+    PRINTS A COUPLE OF TASKS, RECIEVED IN THE id_list[].
+    IF NO ID'S RECIEVED, PRINTS ALL THE TASKS BY CREATION ORDER
+    ALPHABETIC ORDER (DESCRIPTION)
+    INPUT: -
+    OUTPUT: -
+    */
     int list_size, i, j, id_list[MAXTASKS];
-    Task t[MAXTASKS];
+    Task sorted_tasks[MAXTASKS];
 
     for (i = 0; i < task_counter; i++) {
-        t[i] = tasks[i];
+        sorted_tasks[i] = tasks[i];
     }
 
-    /* Reads the ID's of the input and returns the size of the array */
     list_size = readIdList(id_list);
 
     /* If no arguments recieved */
     if (list_size == 0) {
-        sortByAlphabet(t, 0, task_counter-1);
+        quicksort(sorted_tasks, 0, task_counter-1, 0);
         for (i = 0; i < task_counter; i++) {
-            printf("%d %s #%d %s\n", t[i].id, t[i].activity, t[i].duration, t[i].description);
+            printf("%d %s #%d %s\n", sorted_tasks[i].id, sorted_tasks[i].activity, sorted_tasks[i].duration, sorted_tasks[i].description);
         }
     }
     /* If at least 1 ID recieved */
@@ -294,7 +413,12 @@ void caseL() {
 }
 
 void caseN() {
-    /* Main func. of the command 'n' */
+    /*
+    MAIN FUNCTION OF THE COMMAND 'n'
+    ADVANCES IN TIME
+    INPUT: -
+    OUTPUT: -
+    */
     int add_time, status = 0;
     char c;
 
@@ -312,7 +436,12 @@ void caseN() {
 }
 
 void caseU() {
-    /* Main func. of the command 'u' */
+    /*
+    MAIN FUNCTION OF THE COMMAND 'u'
+    CREATES A NEW USER
+    INPUT: -
+    OUTPUT: -
+    */
     User new_user;
     char c;
     int i = 0, state = 0;
@@ -331,7 +460,7 @@ void caseU() {
     }
     else {
         for (i = 0; i <= user_counter; i++) {
-            if (strcmp(new_user.name, users[i].name) == 0) {
+            if (!strcmp(new_user.name, users[i].name)) {
                 printf("user already exists\n");
                 return;
             }
@@ -346,7 +475,12 @@ void caseU() {
 }
 
 void caseM() {
-    /* Main func. of the command 'm' */
+    /*
+    MAIN FUNCTION OF THE COMMAND 'm'
+    MOVE A TASK TO A DIFFERENT ACTIVITY
+    INPUT: -
+    OUTPUT: -
+    */
     int id, i, waste, slack;
     char user[MAXUSERLEN], next_activity[MAXACTLEN], c;
 
@@ -358,7 +492,7 @@ void caseM() {
     if (!verifyID(id)) {
         printf("no such task\n");
     }
-    else if (strcmp(next_activity, "TO DO") == 0) {
+    else if (!strcmp(next_activity, "TO DO")) {
         for (i = 0; i < task_counter; i++) {
             if (tasks[i].id == id) {
                 if (strcmp(tasks[i].activity, "TO DO") != 0) {
@@ -378,11 +512,11 @@ void caseM() {
            if the activity we want to move is "DONE": calculate the waste and slack and print it */
         for (i = 0; i < task_counter; i++) {
             if (id == tasks[i].id) {
-                if (strcmp(tasks[i].activity, "TO DO") == 0) {
+                if (!strcmp(tasks[i].activity, "TO DO")) {
                     tasks[i].start_inst = time;
                 }
                 /* If the task is going to be "DONE", print the waste / slack */
-                if (strcmp(next_activity, "DONE") == 0 && strcmp(tasks[i].activity, "DONE") != 0) {
+                if (!strcmp(next_activity, "DONE") && strcmp(tasks[i].activity, "DONE") != 0) {
                     waste = time - tasks[i].start_inst;
                     slack = waste - tasks[i].duration;
                     printf("duration=%d slack=%d\n", waste, slack);
@@ -394,7 +528,14 @@ void caseM() {
 }
 
 void caseD() {
-    /* Main func. of the command 'd' */
+    /*
+    MAIN FUNCTION OF THE COMMAND 'd'
+    SORT ALL THE TASKS IN A CERTAIN ACTIVITY BY START INSTANT. IF THERE IS
+    TASKS WITH THE SAME START INSTANT, IT SHOULD BE SORT BY ALPHABETIC ORDER
+    OF THE DESCRIPTION
+    INPUT: -
+    OUTPUT: -
+    */
     char activity[MAXACTLEN], c;
     int i, sort_list_counter = 0;
     Task sort_list[MAXTASKS];
@@ -411,13 +552,13 @@ void caseD() {
     else {
         /* Checks which tasks are in the the activity asked in the input */
         for (i = 0; i < task_counter; i++) {
-            if (strcmp(activity, tasks[i].activity) == 0) {
+            if (!strcmp(activity, tasks[i].activity)) {
                 sort_list[sort_list_counter] = tasks[i];
                 sort_list_counter++;
             }
         }
         /* Sort by numeric order of the start instant */
-        sortByInstance(sort_list, 0, sort_list_counter-1);
+        quicksort(sort_list, 0, sort_list_counter-1, 1);
 
         for (i = 0; i < sort_list_counter; i++) {
             printf("%d %d %s\n", sort_list[i].id, sort_list[i].start_inst, sort_list[i].description);
@@ -426,7 +567,12 @@ void caseD() {
 }
 
 void caseA() {
-    /* Main func. of the command 'a' */
+    /*
+    MAIN FUNCTION OF THE COMMAND 'a'
+    CREATES A NEW ACTIVITY
+    INPUT: -
+    OUTPUT: -
+    */
     Activity new_a;
     char c;
     int i;
@@ -460,7 +606,7 @@ void caseA() {
         }
 
         for (i = 0; i < act_counter; i++) {
-            if (strcmp(act[i].name, new_a.name) == 0) {
+            if (!strcmp(act[i].name, new_a.name)) {
                 printf("duplicate activity\n");
                 return;
             }
@@ -474,6 +620,7 @@ void caseA() {
 /*############################## MAIN FUNCTION ##############################*/
 
 int main() {
+    /* FUNCTION THAT CONTROLS ALL THE PROJECT */
     char c;
     int exit = 0;
     
