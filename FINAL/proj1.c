@@ -363,7 +363,6 @@ void caseM() {
             if (tasks[i].id == id) {
                 if (strcmp(tasks[i].activity, "TO DO") != 0) {
                     printf("task already started\n");
-                    return;
                 }
             }
         }
@@ -382,6 +381,7 @@ void caseM() {
                 if (strcmp(tasks[i].activity, "TO DO") == 0) {
                     tasks[i].start_inst = time;
                 }
+                /* If the task is going to be "DONE", print the waste / slack */
                 if (strcmp(next_activity, "DONE") == 0 && strcmp(tasks[i].activity, "DONE") != 0) {
                     waste = time - tasks[i].start_inst;
                     slack = waste - tasks[i].duration;
@@ -409,15 +409,14 @@ void caseD() {
         printf("no such activity\n");
     }
     else {
-        /* VERIFICAR QUAIS AS TAREFAS ESTAO NA ACT PEDIDA -> LISTA DE IDS / LISTA DE TASKS*/
+        /* Checks which tasks are in the the activity asked in the input */
         for (i = 0; i < task_counter; i++) {
             if (strcmp(activity, tasks[i].activity) == 0) {
                 sort_list[sort_list_counter] = tasks[i];
                 sort_list_counter++;
             }
         }
-        /* SORT ORDEM NUMERICA DE INSTANTES INICIAIS */
-
+        /* Sort by numeric order of the start instant */
         sortByInstance(sort_list, 0, sort_list_counter-1);
 
         for (i = 0; i < sort_list_counter; i++) {
@@ -429,20 +428,24 @@ void caseD() {
 void caseA() {
     /* Main func. of the command 'a' */
     Activity new_a;
-    int i, state = 0;
-    char c;
+    char activity[MAXACTLEN];
+    int i;
 
-    while ((c = getchar()) && c != '\n') {
-        state = scanf("%20[^\n]", new_a.name);
-    }
+    /* Reads the input, can't use scanf() because activities can contain
+       some strange chars */
+    fgets(activity, MAXACTLEN, stdin);
+    sscanf(activity, " %[^\n]", new_a.name);
 
-    if (state == 0) {
+    /* If activity[0] = '\n' means that there was no argument
+       on the input */
+    if (activity[0] == '\n') {
         for (i = 0; i < act_counter; i++) {
             printf("%s\n", act[i].name);
         }
     }
 
     else {
+        /* Error testing */
         if (act_counter >= MAXACT) {
             printf("too many activities\n");
             return;
