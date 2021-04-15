@@ -3,7 +3,6 @@
 #include <ctype.h>
 
 #define MAXDESCLEN 51
-#define MAXID 1000
 #define MAXUSERS 50
 #define MAXACT 10
 #define MAXACTLEN 21
@@ -352,10 +351,13 @@ void caseM() {
 
     /* Reads the input */
     scanf("%d %20s %20[^\n]", &id, user, next_activity);
-    while ((c = getchar()) != EOF && c != '\n');
+    while ((c = getchar()) != '\n');
 
     /* Error testing */
-    if (!verifyID(id)) {
+    if (!strcmp(next_activity, tasks[id-1].activity)) {
+        return;
+    }
+    else if (!verifyID(id)) {
         printf("no such task\n");
     }
     else if (strcmp(next_activity, "TO DO") == 0) {
@@ -363,7 +365,6 @@ void caseM() {
             if (tasks[i].id == id) {
                 if (strcmp(tasks[i].activity, "TO DO") != 0) {
                     printf("task already started\n");
-                    return;
                 }
             }
         }
@@ -388,6 +389,7 @@ void caseM() {
                     printf("duration=%d slack=%d\n", waste, slack);
                 }
                 strcpy(tasks[i].activity, next_activity);
+                strcpy(tasks[i].user, user);
             }
         }
     }
@@ -443,23 +445,23 @@ void caseA() {
     }
 
     else {
-        if (act_counter >= MAXACT) {
-            printf("too many activities\n");
-            return;
-        }
-
-        for (i = 0; new_a.name[i] != '\0'; i++) {
-            if (islower(new_a.name[i]) != 0) {
-                printf("invalid description\n");
-                return;
-            }
-        }
-
         for (i = 0; i < act_counter; i++) {
             if (strcmp(act[i].name, new_a.name) == 0) {
                 printf("duplicate activity\n");
                 return;
             }
+        }
+
+        for (i = 0; new_a.name[i] != '\0'; i++) {
+            if (new_a.name[i] >= 'a' && new_a.name[i] <= 'z') {
+                printf("invalid description\n");
+                return;
+            }
+        }
+
+        if (act_counter >= MAXACT) {
+            printf("too many activities\n");
+            return;
         }
 
         strcpy(act[act_counter].name, new_a.name);
