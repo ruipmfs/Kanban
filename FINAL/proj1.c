@@ -428,17 +428,18 @@ void caseD() {
 void caseA() {
     /* Main func. of the command 'a' */
     Activity new_a;
-    char activity[MAXACTLEN];
+    char c;
     int i;
+    new_a.name[0] = '\0';
 
-    /* Reads the input, can't use scanf() because activities can contain
-       some strange chars */
-    fgets(activity, MAXACTLEN, stdin);
-    sscanf(activity, " %[^\n]", new_a.name);
+    /* Reads the input */
+    while ((c = getchar()) && c != '\n') {
+        scanf("%20[^\n]", new_a.name);
+    }
 
-    /* If activity[0] = '\n' means that there was no argument
+    /* If activity[0] = '\0' means that there was no argument
        on the input */
-    if (activity[0] == '\n') {
+    if (new_a.name[0] == '\0') {
         for (i = 0; i < act_counter; i++) {
             printf("%s\n", act[i].name);
         }
