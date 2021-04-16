@@ -429,7 +429,7 @@ void caseM() {
                     printf("task already started\n");
                 }
             }
-        }
+        }   
     }
     else if (!verifyUser(user)) {
         printf("no such user\n");
@@ -551,6 +551,19 @@ void caseA() {
 
 /*############################## MAIN FUNCTION ##############################*/
 
+void displayMenu() {
+    printf("\n**** K A N B A N ****\n");
+    printf("t - Criar tarefa\n");
+    printf("l - Mostrar tarefas\n");
+    printf("n - Avancar tempo\n");
+    printf("u - Gerir utilizadores\n");
+    printf("m - Mover tarefa\n");
+    printf("d - Mostrar tarefas na atividade\n");
+    printf("a - Gerir atividades\n");
+    printf("q - Sair\n");
+    printf("************************\n");
+}
+
 int main() {
     /*
     FUNCTION THAT CONTROLS ALL THE PROJECT
@@ -565,6 +578,7 @@ int main() {
     setDefaultActs();
 
     while (!exit) {
+        displayMenu();
         switch (c = getchar()) {
             case 't':
                 caseT();
